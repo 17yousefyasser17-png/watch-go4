@@ -1,43 +1,81 @@
-/* --- Mobile Optimized CSS for Movie Page --- */
-.hero-section { padding: 20px 10px; background-attachment: scroll; }
-
-.movie-layout { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 25px; 
+/* منع الهزة والتحرك يمين وشمال */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-/* البوستر في النص */
-.side-panel { width: 100%; align-items: center; }
-.poster { max-width: 220px; margin-bottom: 10px; }
-
-.btn { width: 90%; max-width: 300px; padding: 12px; font-size: 14px; }
-
-/* المحتوى */
-.content-panel { width: 100%; }
-.content-panel h1 { font-size: 26px; text-align: center; line-height: 1.3; }
-
-.overview { 
-    font-size: 15px; 
-    padding: 15px; 
-    border-right: 3px solid var(--primary); 
+.hero-section {
+    padding: 20px 10px !important;
+    background-attachment: scroll !important; /* أحسن لأداء الموبايل */
 }
 
-/* شبكة المواسم والحلقات */
-#seasonsGrid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-#episodesGrid { grid-template-columns: 1fr; gap: 15px; }
-
-/* معلومات العمل: اتنين في كل صف */
-.details-grid { 
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px; 
+/* إلغاء نظام الأعمدة بتاع الديسك توب */
+.movie-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 20px !important;
 }
-.detail-card { padding: 10px; font-size: 12px; flex-direction: column; gap: 5px; }
 
-/* طاقم التمثيل: تصغير الصور */
-.cast-item img { width: 65px; height: 65px; }
-.cast-item p { font-size: 11px; }
+/* البوستر */
+.side-panel {
+    width: 100% !important;
+    align-items: center !important;
+}
 
-/* الأعمال المشابهة */
-#relatedGrid { grid-template-columns: repeat(2, 1fr); }
+.poster {
+    max-width: 200px !important;
+    box-shadow: 0 0 20px var(--primary) !important;
+}
+
+.content-panel {
+    width: 100% !important;
+}
+
+.content-panel h1 {
+    font-size: 26px !important;
+    text-align: center;
+}
+
+.overview {
+    padding: 15px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+}
+
+/* --- نظام الكرتين للمواسم والحلقات والفيلم --- */
+#seasonsGrid, #episodesGrid, #relatedGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* كرتين جنب بعض */
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+/* كروت الحلقات (عرضية) */
+#episodesGrid img {
+    height: 110px !important;
+}
+
+/* كروت المواسم والشبيهة */
+#seasonsGrid img, #relatedGrid img {
+    height: 220px !important;
+}
+
+/* ضبط الممثلين */
+.cast-item {
+    min-width: 80px !important;
+}
+
+.cast-item img {
+    width: 65px !important;
+    height: 65px !important;
+}
+
+/* أزرار المشاهدة */
+.btn {
+    width: 90% !important;
+    font-size: 14px !important;
+}
