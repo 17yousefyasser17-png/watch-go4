@@ -1,1 +1,24 @@
+.header { padding: 0 15px; height: 65px; justify-content: center; }
+.main-nav { display: none; } /* إخفاء القائمة في الموبايل */
+.header-icons { position: absolute; left: 15px; }
 
+#heroSection { height: 350px; }
+.slide-overlay { padding: 0 20px; align-items: center; text-align: center; }
+.slide-title { font-size: 22px; line-height: 1.4; }
+.hero-btn { padding: 10px 25px; font-size: 14px; }
+
+.container { padding: 10px; display: block; }
+.sidebar { display: none; } /* إخفاء الجوانب لتوفير مساحة */
+
+.section-box { padding: 15px 10px; }
+.section-title { font-size: 16px; margin-bottom: 15px; }
+
+.grid-display { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); /* فيلمين جنب بعض */
+    gap: 10px; 
+}
+.item-card img { height: 190px; }
+.item-name { font-size: 11px; }
+
+#searchBox input { width: 90%; }
