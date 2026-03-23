@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchGo - Premium Cinema</title>
+    <title>WatchGo - Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
@@ -18,10 +18,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* خلفية الـ Glow */
+        /* خلفية Glow بنفسجي */
         body::before {
             content: ""; position: fixed; inset: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.08) 0%, transparent 80%);
+            background: radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.1) 0%, transparent 80%);
             filter: blur(100px); z-index: -1;
         }
 
@@ -54,7 +54,7 @@
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center top; position: relative; }
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 5%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 60px; }
 
-        /* --- تنظيم الأقسام الرئيسية --- */
+        /* --- المحتوى --- */
         .container { padding: 20px 40px; display: grid; grid-template-columns: 1fr 280px; gap: 30px; }
         .main-col { display: flex; flex-direction: column; gap: 40px; }
 
@@ -62,9 +62,8 @@
             display: flex; justify-content: space-between; align-items: center; 
             margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 15px;
         }
-        .section-header h3 { font-size: 18px; color: var(--primary); text-transform: uppercase; }
+        .section-header h3 { font-size: 18px; color: var(--primary); }
 
-        /* شبكة الأفلام */
         .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
         
         .item-card { 
@@ -76,12 +75,12 @@
         .badge { position: absolute; top: 10px; left: 10px; background: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .item-info { padding: 10px; text-align: center; font-size: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* الجانب الأيمن */
         .sidebar { background: rgba(10, 10, 10, 0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; }
-        .side-title { color: var(--primary); font-size: 16px; font-weight: bold; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-
         #searchBox { display: none; padding: 20px; background: #0a0a0a; text-align: center; }
         #searchBox input { width: 70%; padding: 12px 25px; border-radius: 30px; border: 1px solid var(--primary); background: #111; color: #fff; outline: none; }
+
+        /* إخفاء الأقسام عند اختيار تصنيف معين */
+        .hidden { display: none; }
 
         @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
     </style>
@@ -99,17 +98,17 @@
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#foreign-movies">أفلام أجنبي</a>
-                    <a href="#anime-movies">أفلام أنمي</a>
-                    <a href="#asian-movies">أفلام آسيوية</a>
-                    <a href="#netflix-movies">أفلام نتفليكس</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبي كاملة', '')">أفلام أجنبي</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أنمي كاملة', '16')">أفلام أنمي</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام آسيوية كاملة', '10749')">أفلام آسيوية</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس كاملة', '213')">أفلام نتفليكس</a>
                 </div>
             </li>
             <li class="nav-item">
                 <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#foreign-series">مسلسلات أجنبي</a>
-                    <a href="#netflix-series">مسلسلات نتفليكس</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'مسلسلات أجنبية كاملة', '')">مسلسلات أجنبي</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'مسلسلات نتفليكس كاملة', '213')">مسلسلات نتفليكس</a>
                 </div>
             </li>
             <li class="nav-item"><a class="nav-link">القسم الآسيوي</a></li>
@@ -123,30 +122,27 @@
     <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
 
     <div class="container">
-        <div class="main-col">
-            <section id="netflix-movies">
-                <div class="section-header"><h3><i class="fa-solid fa-n"></i> أفلام نتفليكس</h3></div>
-                <div class="movies-grid" id="netflixGrid"></div>
-            </section>
+        <div class="main-col" id="mainLayout">
+            <div id="homeRows">
+                <section>
+                    <div class="section-header"><h3><i class="fa-solid fa-fire"></i> أفلام مقترحة</h3></div>
+                    <div class="movies-grid" id="popularGrid"></div>
+                </section>
+                <br>
+                <section>
+                    <div class="section-header"><h3><i class="fa-solid fa-n"></i> نتفليكس</h3></div>
+                    <div class="movies-grid" id="netflixHomeGrid"></div>
+                </section>
+            </div>
 
-            <section id="foreign-movies">
-                <div class="section-header"><h3><i class="fa-solid fa-globe"></i> أفلام أجنبي حديثة</h3></div>
-                <div class="movies-grid" id="foreignGrid"></div>
-            </section>
-
-            <section id="anime-movies">
-                <div class="section-header"><h3><i class="fa-solid fa-ghost"></i> أفلام أنمي</h3></div>
-                <div class="movies-grid" id="animeGrid"></div>
-            </section>
-
-            <section id="foreign-series">
-                <div class="section-header"><h3><i class="fa-solid fa-tv"></i> مسلسلات أجنبي</h3></div>
-                <div class="movies-grid" id="seriesGrid"></div>
-            </section>
+            <div id="categoryView" class="hidden">
+                <div class="section-header"><h3 id="categoryTitle"></h3></div>
+                <div class="movies-grid" id="categoryGrid"></div>
+            </div>
         </div>
 
         <aside class="sidebar">
-            <div class="side-title"><i class="fa-solid fa-fire"></i> الأكثر مشاهدة</div>
+            <div style="color:var(--primary); font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">الأكثر مشاهدة</div>
             <div id="trendingSidebar"></div>
         </aside>
     </div>
@@ -160,30 +156,43 @@
             s.style.display = (s.style.display === 'block') ? 'none' : 'block';
         }
 
-        async function fetchData(endpoint, gridId, isSeries = false) {
-            const res = await fetch(`${BASE_URL}/${endpoint}&api_key=${API_KEY}&language=en-US`);
+        // الوظيفة الأساسية للتحويل لصفحة القسم بالكامل
+        async function showCategory(endpoint, title, genreId) {
+            // إخفاء صفوف الرئيسية وإظهار عرض التصنيف
+            document.getElementById('homeRows').classList.add('hidden');
+            document.getElementById('categoryView').classList.remove('hidden');
+            document.getElementById('categoryTitle').innerText = title;
+
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US&page=1`;
+            if(genreId) url += `&with_genres=${genreId}`;
+            if(title.includes('نتفليكس')) url += `&with_networks=213`;
+
+            const res = await fetch(url);
             const data = await res.json();
-            const grid = document.getElementById(gridId);
-            grid.innerHTML = data.results.slice(0, 6).map(m => `
-                <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${isSeries ? 'tv' : 'movie'}'">
-                    <div class="badge">4K</div>
+            
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = data.results.map(m => `
+                <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${endpoint.includes('tv') ? 'tv' : 'movie'}'">
+                    <div class="badge">Full HD</div>
                     <img src="https://image.tmdb.org/t/p/w500${m.poster_path}">
                     <div class="item-info">${m.title || m.name}</div>
                 </div>
             `).join('');
-            return data.results;
+            
+            window.scrollTo({ top: 350, behavior: 'smooth' });
         }
 
         async function init() {
-            // السلايدر (أفلام مشهورة)
-            const popular = await fetchData('movie/popular?', 'foreignGrid');
-            renderSlider(popular.slice(0, 5));
+            // جلب بيانات الرئيسية
+            const resPop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
+            const popData = await resPop.json();
+            renderGrid('popularGrid', popData.results.slice(0, 12));
+            renderSlider(popData.results.slice(0, 5));
 
-            // الأقسام المختلفة في الصفحة الرئيسية
-            fetchData('discover/movie?with_networks=213', 'netflixGrid'); // نتفليكس
-            fetchData('discover/movie?with_genres=16', 'animeGrid'); // أنمي
-            fetchData('tv/popular?', 'seriesGrid', true); // مسلسلات
-            
+            const resNet = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_networks=213`);
+            const netData = await resNet.json();
+            renderGrid('netflixHomeGrid', netData.results.slice(0, 6));
+
             // القائمة الجانبية
             const trending = await fetch(`${BASE_URL}/trending/all/day?api_key=${API_KEY}`);
             const tData = await trending.json();
@@ -191,6 +200,15 @@
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px; cursor:pointer;" onclick="location.href='movie.html?id=${m.id}&type=${m.media_type}'">
                     <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" style="width:40px; height:55px; border-radius:4px; object-fit:cover;">
                     <div style="font-size:11px; font-weight:600; color:#ccc;">${m.title || m.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderGrid(gridId, results) {
+            document.getElementById(gridId).innerHTML = results.map(m => `
+                <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${m.title ? 'movie' : 'tv'}'">
+                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}">
+                    <div class="item-info">${m.title || m.name}</div>
                 </div>
             `).join('');
         }
@@ -203,20 +221,6 @@
                 </div>
             `).join('');
             let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 5000);
-        }
-
-        async function searchApi(query) {
-            if(query.length < 2) return;
-            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=en-US`);
-            const data = await res.json();
-            // عرض نتائج البحث في أول شبكة موجودة
-            document.getElementById('netflixGrid').parentElement.scrollIntoView();
-            document.getElementById('netflixGrid').innerHTML = data.results.slice(0, 12).map(m => `
-                <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${m.media_type}'">
-                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}">
-                    <div class="item-info">${m.title || m.name}</div>
-                </div>
-            `).join('');
         }
 
         init();
