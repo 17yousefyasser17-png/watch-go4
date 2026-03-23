@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchGo - Premium Cinema Hub</title>
+    <title>WatchGo - Pro Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
             --primary: #9b51e0; 
             --bg-dark: #050505; 
             --card-bg: rgba(20, 20, 20, 0.95);
-            --transition: 0.3s ease-in-out;
+            --transition: 0.3s ease;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* تأثير التوهج الخلفي */
+        /* تأثير التوهج */
         body::before {
             content: ""; position: fixed; inset: 0;
             background: radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.08) 0%, transparent 85%);
@@ -45,36 +45,39 @@
 
         /* --- السلايدر الرئيسي --- */
         #heroSection { width: 100%; height: 350px; position: relative; overflow: hidden; }
-        .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease; }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center top; position: relative; }
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 15%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 60px; }
 
-        /* --- المحتوى (3 بارات) --- */
+        /* --- المحتوى --- */
         .container { padding: 30px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; }
 
-        /* --- الأقسام (توب سيما ستايل) --- */
         .section-box { position: relative; margin-bottom: 45px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #222; }
-        .section-title { color: var(--primary); font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .section-title { color: var(--primary); font-size: 16px; font-weight: bold; margin-bottom: 15px; border-right: 3px solid var(--primary); padding-right: 10px; }
 
-        .carousel-wrapper { position: relative; }
+        /* حاوية الحركة والأسهم */
+        .carousel-wrapper { position: relative; width: 100%; }
+        
         .nav-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(155, 81, 224, 0.9); color: white; border: none;
+            background: var(--primary); color: white; border: none;
             width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
-            z-index: 10; opacity: 0; transition: 0.3s;
+            z-index: 50; opacity: 0; transition: 0.3s; display: flex; align-items: center; justify-content: center;
         }
         .carousel-wrapper:hover .nav-btn { opacity: 1; }
-        .prev-btn { right: -15px; } .next-btn { left: -15px; }
+        
+        /* ضبط مكان السهمين يمين وشمال */
+        .prev-btn { right: -15px; } 
+        .next-btn { left: -15px; }
 
         .scroll-container { 
-            display: flex; overflow-x: auto; gap: 15px; padding: 10px 0;
+            display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px;
             scroll-behavior: smooth; scrollbar-width: none; 
         }
         .scroll-container::-webkit-scrollbar { display: none; }
 
         .item-card { min-width: 165px; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: var(--transition); cursor: pointer; position: relative; }
-        .item-card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(155, 81, 224, 0.2); }
+        .item-card:hover { transform: translateY(-8px); border-color: var(--primary); }
         .item-card img { width: 100%; height: 235px; object-fit: cover; }
         .item-info { padding: 10px; text-align: center; }
         .item-name { font-size: 12px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -83,7 +86,7 @@
         /* البارات الجانبية */
         .sidebar { background: rgba(10, 10, 10, 0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; }
         .side-title { color: var(--primary); font-size: 14px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; text-align: center; }
-        .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; font-size: 11px; }
+        .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; font-size: 11px; transition: 0.2s; }
         .side-item:hover { color: var(--primary); transform: scale(1.02); }
         .side-item img { width: 45px; height: 60px; border-radius: 5px; object-fit: cover; border: 1px solid #333; }
 
@@ -99,7 +102,7 @@
     <header class="header">
         <a href="index.html" class="logo-ctn">
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
-            <span style="font-weight: bold; font-size: 22px; letter-spacing: 1px;">WATCHGO</span>
+            <span style="font-weight: bold; font-size: 22px;">WATCHGO</span>
         </a>
         <ul class="main-nav">
             <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
@@ -113,25 +116,22 @@
             </li>
             <li class="nav-item"><a class="nav-link" onclick="showCategory('discover/tv', 'المسلسلات الكاملة', '')">المسلسلات</a></li>
         </ul>
-        <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer; font-size: 18px;"></i></div>
+        <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer;"></i></div>
     </header>
 
-    <div id="searchBox"><input type="text" placeholder="ابحث عن فيلمك أو مسلسلك..." onkeyup="searchApi(this.value)"></div>
+    <div id="searchBox"><input type="text" placeholder="ابحث هنا..." onkeyup="searchApi(this.value)"></div>
     <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
 
     <div class="container">
         <aside class="sidebar">
             <div class="side-title">أفضل أفلام الشهر</div>
             <div id="bestMoviesSide"></div>
-            <br>
-            <div class="side-title">أفضل مسلسلات الشهر</div>
-            <div id="bestSeriesSide"></div>
         </aside>
 
         <main class="main-col">
             <div id="homeView">
                 <section class="section-box">
-                    <div class="section-header"><div class="section-title"><i class="fa-solid fa-clock"></i> أحدث الحلقات المضافة</div></div>
+                    <div class="section-title"><i class="fa-solid fa-clock"></i> أحدث الحلقات</div>
                     <div class="carousel-wrapper">
                         <button class="nav-btn prev-btn" onclick="slide('episodesScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
                         <div class="scroll-container" id="episodesScroll"></div>
@@ -140,7 +140,7 @@
                 </section>
 
                 <section class="section-box">
-                    <div class="section-header"><div class="section-title"><i class="fa-solid fa-n"></i> مسلسلات نتفليكس</div></div>
+                    <div class="section-title"><i class="fa-solid fa-n"></i> مسلسلات نتفليكس</div>
                     <div class="carousel-wrapper">
                         <button class="nav-btn prev-btn" onclick="slide('netflixTVScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
                         <div class="scroll-container" id="netflixTVScroll"></div>
@@ -149,27 +149,18 @@
                 </section>
 
                 <section class="section-box">
-                    <div class="section-header"><div class="section-title"><i class="fa-solid fa-globe"></i> أحدث الأفلام الأجنبية</div></div>
+                    <div class="section-title"><i class="fa-solid fa-globe"></i> أحدث الأفلام</div>
                     <div class="carousel-wrapper">
                         <button class="nav-btn prev-btn" onclick="slide('moviesScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
                         <div class="scroll-container" id="moviesScroll"></div>
                         <button class="nav-btn next-btn" onclick="slide('moviesScroll', 'left')"><i class="fa-solid fa-chevron-left"></i></button>
                     </div>
                 </section>
-
-                <section class="section-box">
-                    <div class="section-header"><div class="section-title"><i class="fa-solid fa-earth-asia"></i> القسم الآسيوي</div></div>
-                    <div class="carousel-wrapper">
-                        <button class="nav-btn prev-btn" onclick="slide('asianScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
-                        <div class="scroll-container" id="asianScroll"></div>
-                        <button class="nav-btn next-btn" onclick="slide('asianScroll', 'left')"><i class="fa-solid fa-chevron-left"></i></button>
-                    </div>
-                </section>
             </div>
 
             <div id="fullView" class="hidden">
                 <div class="section-box">
-                    <div class="section-header"><div class="section-title" id="fullTitle"></div></div>
+                    <div class="section-title" id="fullTitle"></div>
                     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:20px;" id="fullGrid"></div>
                 </div>
             </div>
@@ -178,9 +169,6 @@
         <aside class="sidebar">
             <div class="side-title">أحدث الأنميات</div>
             <div id="animeSide"></div>
-            <br>
-            <div class="side-title">أفلام نتفليكس</div>
-            <div id="netflixMoviesSide"></div>
         </aside>
     </div>
 
@@ -193,9 +181,16 @@
             s.style.display = (s.style.display === "block") ? "none" : "block"; 
         }
 
+        // تحريك السكرول (الأسهم)
         function slide(id, direction) {
             const container = document.getElementById(id);
-            container.scrollBy({ left: direction === 'left' ? -400 : 400, behavior: 'smooth' });
+            // في الـ RTL الاتجاه بيبقى معكوس شوية
+            const step = 400;
+            if (direction === 'left') {
+                container.scrollBy({ left: -step, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: step, behavior: 'smooth' });
+            }
         }
 
         function createCard(m, type) {
@@ -209,51 +204,36 @@
                 </div>`;
         }
 
-        function createSideItem(m, type) {
-            return `
-                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=${type}'">
-                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div>${m.title || m.name}</div>
-                </div>`;
-        }
-
         async function init() {
-            // السلايدر
             const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
             const popData = await pop.json();
             renderSlider(popData.results.slice(0, 5));
+            document.getElementById('moviesScroll').innerHTML = popData.results.map(m => createCard(m, 'movie')).join('');
 
-            // الأقسام الرئيسية (Carousel)
             const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}`);
             const epData = await ep.json();
             document.getElementById('episodesScroll').innerHTML = epData.results.map(m => createCard(m, 'tv')).join('');
 
-            const netTV = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_networks=213`);
-            const netTVData = await netTV.json();
-            document.getElementById('netflixTVScroll').innerHTML = netTVData.results.map(m => createCard(m, 'tv')).join('');
+            const net = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_networks=213`);
+            const netData = await net.json();
+            document.getElementById('netflixTVScroll').innerHTML = netData.results.map(m => createCard(m, 'tv')).join('');
 
-            document.getElementById('moviesScroll').innerHTML = popData.results.map(m => createCard(m, 'movie')).join('');
-
-            const asian = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ko|ja|zh`);
-            const asianData = await asian.json();
-            document.getElementById('asianScroll').innerHTML = asianData.results.map(m => createCard(m, 'movie')).join('');
-
-            // البارات الجانبية (أفضل أعمال الشهر وغيرها)
+            // البارات الجانبية
             const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`);
             const bestMData = await bestM.json();
-            document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 5).map(m => createSideItem(m, 'movie')).join('');
-
-            const bestS = await fetch(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}`);
-            const bestSData = await bestS.json();
-            document.getElementById('bestSeriesSide').innerHTML = bestSData.results.slice(0, 5).map(m => createSideItem(m, 'tv')).join('');
+            document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 6).map(m => `
+                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
+                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
+                    <div>${m.title}</div>
+                </div>`).join('');
 
             const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16`);
             const aniData = await ani.json();
-            document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 6).map(m => createSideItem(m, 'movie')).join('');
-
-            const netM = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_networks=213`);
-            const netMData = await netM.json();
-            document.getElementById('netflixMoviesSide').innerHTML = netMData.results.slice(0, 6).map(m => createSideItem(m, 'movie')).join('');
+            document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 6).map(m => `
+                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
+                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
+                    <div>${m.title}</div>
+                </div>`).join('');
         }
 
         function renderSlider(movies) {
