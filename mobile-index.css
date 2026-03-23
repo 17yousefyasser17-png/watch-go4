@@ -1,188 +1,75 @@
-/* --- Mobile Optimized CSS for Index with Hamburger Menu --- */
-:root { 
-    --primary: #9b51e0; 
-    --bg-dark: #050505; 
-    --card-bg: rgba(20, 20, 20, 0.95);
-    --text-color: #eee;
-}
-
-body { 
-    background: var(--bg-dark); 
-    color: var(--text-color);
-    font-family: sans-serif;
+/* منع الحركة الأفقية نهائياً */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
     margin: 0;
-    padding-bottom: 20px;
-    overflow-x: hidden; /* منع الحركة الأفقية */
-}
-
-/* --- الهيدر للموبايل --- */
-.header { 
-    background: #0a0a0a;
-    padding: 0 15px; 
-    height: 60px; 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--primary);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo-ctn { display: flex; align-items: center; gap: 8px; text-decoration: none; color: white; }
-.logo-ctn img { width: 35px; height: 35px; border-radius: 50%; }
-.logo-ctn span { font-size: 18px; font-weight: bold; }
-
-/* إخفاء الناف بار الطويل في الموبايل */
-.main-nav { display: none; }
-
-.header-icons { display: flex; gap: 15px; align-items: center; }
-.header-icons i { color: white; font-size: 20px; cursor: pointer; }
-
-/* --- أيقونة الـ Hamburger Menu (☰) --- */
-.menu-toggle {
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    display: block; /* تظهر فقط في الموبايل */
-}
-
-/* --- القائمة الجانبية (Sidebar Menu) --- */
-.mobile-sidebar {
-    position: fixed;
-    top: 0;
-    right: -280px; /* مختفية جهة اليمين */
-    width: 280px;
-    height: 100%;
-    background: #111;
-    z-index: 2000;
-    transition: 0.3s ease-in-out;
-    overflow-y: auto; /* التمرير العمودي داخل القائمة */
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-    padding: 20px;
-}
-
-.mobile-sidebar.open {
-    right: 0; /* تظهر عند الفتح */
-}
-
-.close-menu {
-    font-size: 22px;
-    color: #999;
-    text-align: left;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-.close-menu:hover { color: white; }
-
-/* تنسيق عناصر القائمة الجانبية */
-.sidebar-content h3 {
-    color: var(--primary);
-    font-size: 16px;
-    margin: 25px 0 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #333;
-}
-
-.sidebar-content ul {
-    list-style: none;
     padding: 0;
-    margin: 0;
 }
 
-.sidebar-content li a {
-    display: block;
-    color: #ccc;
-    text-decoration: none;
-    padding: 10px 0;
-    font-size: 14px;
-    transition: 0.2s;
+/* ضبط الهيدر للموبايل */
+.header {
+    padding: 0 15px !important;
+    height: 60px !important;
 }
 
-.sidebar-content li a:hover {
-    color: var(--primary);
-    padding-right: 5px; /* تأثير حركي بسيط */
+.main-nav {
+    display: none !important; /* إخفاء منيو الديسك توب */
 }
 
-/* تظليل الخلفية عند فتح القائمة */
-.sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 1500;
-    display: none;
-}
-.sidebar-overlay.open { display: block; }
-
-/* --- السلايدر في الموبايل --- */
-#heroSection { height: 280px; position: relative; overflow: hidden; }
-.slider-wrapper { display: flex; height: 100%; transition: transform 0.5s ease-in-out; }
-.slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; }
-.slide-overlay { 
-    position: absolute; inset: 0; 
-    background: linear-gradient(to top, #050505 10%, transparent); 
-    display: flex; flex-direction: column; justify-content: center; 
-    padding: 0 20px; text-align: center; align-items: center; 
-}
-.slide-title { font-size: 22px; margin-bottom: 10px; font-weight: bold; color: white; }
-.hero-btn { 
-    background: var(--primary); color: white; text-decoration: none; 
-    padding: 10px 20px; border-radius: 20px; font-weight: bold; 
-    display: flex; align-items: center; gap: 8px; font-size: 14px; 
+/* السلايدر للموبايل */
+#heroSection {
+    height: 280px !important;
 }
 
-/* --- الحاوية الرئيسية --- */
-.container { 
-    padding: 15px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px; 
-    width: 100%;
+.slide-overlay {
+    padding: 0 20px !important;
+    text-align: center;
+    align-items: center;
+}
+
+.slide-title {
+    font-size: 22px !important;
+}
+
+/* الحاوية الأساسية */
+.container {
+    display: block !important; /* إلغاء الـ Grid بتاع الديسك توب */
+    padding: 15px 10px !important;
+    width: 100% !important;
     box-sizing: border-box;
 }
 
-/* إخفاء سايد بار الديسك توب */
-.sidebar { display: none; }
-
-.section-box { margin-bottom: 30px; }
-.section-title { 
-    color: var(--primary); 
-    font-size: 16px; 
-    font-weight: bold; 
-    margin-bottom: 15px; 
-    border-right: 3px solid var(--primary); 
-    padding-right: 8px; 
+/* إخفاء السايد بار */
+.sidebar {
+    display: none !important;
 }
 
-/* --- شبكة الأفلام: كارتين جنب بعض --- */
-.grid-display { 
-    display: grid; 
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 12px; 
+/* --- نظام الكرتين جنب بعض --- */
+.grid-display {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* كرتين بالظبط */
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 0 !important;
 }
 
-.item-card { 
-    background: var(--card-bg); 
-    border-radius: 8px; 
-    overflow: hidden; 
-    border: 1px solid #222; 
+.item-card {
+    width: 100% !important;
+    margin: 0 !important;
 }
-.item-card img { width: 100%; height: 200px; object-fit: cover; }
-.item-info { padding: 8px; text-align: center; }
-.item-name { font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.watch-btn { background: var(--primary); color: #fff; font-size: 9px; padding: 5px; border-radius: 3px; font-weight: bold; }
 
-/* البحث في الموبايل */
-#searchBox input { 
-    width: 90%; 
-    padding: 10px; 
-    border-radius: 20px; 
-    border: 1px solid var(--primary); 
-    background: #111; 
-    color: #fff; 
-    font-size: 14px;
+.item-card img {
+    height: 220px !important; /* طول الكرت */
+    width: 100%;
+    object-fit: cover;
 }
-.hidden { display: none !important; }
+
+.item-name {
+    font-size: 11px !important;
+}
+
+/* ضبط بوكس البحث */
+#searchBox input {
+    width: 90% !important;
+}
