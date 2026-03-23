@@ -1,1 +1,37 @@
+/* --- الأكواد المشتركة (DNA الموقع) --- */
+:root { 
+    --primary: #9b51e0; 
+    --bg-dark: #050505; 
+    --card-bg: rgba(20, 20, 20, 0.95);
+    --transition: 0.3s ease;
+}
 
+/* ريست عام لكل العناصر */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+/* تنسيق الخلفية والخط الأساسي */
+body { 
+    background: var(--bg-dark); 
+    color: #fff; 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    overflow-x: hidden; 
+}
+
+/* تأثير الإضاءة البنفسجية في الخلفية */
+body::before {
+    content: ""; 
+    position: fixed; 
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.08) 0%, transparent 85%);
+    filter: blur(100px); 
+    z-index: -1;
+}
+
+/* كلاس لإخفاء العناصر عند اللزوم */
+.hidden { 
+    display: none !important; 
+}
