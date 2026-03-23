@@ -57,7 +57,8 @@
         }
         .btn-watch { background: var(--primary); }
         .btn-download { background: #222; border: 1px solid #444; }
-        .btn-trailer { background: #ff0000; }
+        .btn-trailer { background: #ff0000; box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
+        .btn-trailer:hover { box-shadow: 0 0 30px #ff0000; transform: translateY(-5px); }
         .btn:hover { transform: translateY(-5px); filter: brightness(1.2); }
 
         /* الجانب الأيسر */
@@ -96,9 +97,9 @@
 
         .related-section { position: relative; z-index: 2; width: 100%; max-width: 1400px; padding: 40px 0; }
 
-        /* مودال التريلر */
-        #trailerModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; }
-        .modal-content { position:relative; width:90%; max-width:900px; }
+        /* مودال التريلر مع تأثير الجلو والبلور */
+        #trailerModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(15px); }
+        .modal-content { position:relative; width:90%; max-width:900px; box-shadow: 0 0 60px var(--primary); border-radius: 15px; background: #000; }
 
         @media (max-width: 1000px) {
             .movie-layout { grid-template-columns: 1fr; }
@@ -120,7 +121,7 @@
             </div>
 
             <div class="content-panel">
-                <h1 id="movieTitle">جاري التحميل...</h1>
+                <h1 id="movieTitle">Loading...</h1>
                 <div class="section-header"><i class="fa-solid fa-align-right"></i> قصة العمل</div>
                 <p id="movieOverview" class="overview">جاري التحميل...</p>
 
@@ -158,8 +159,8 @@
 
     <div id="trailerModal">
         <div class="modal-content">
-            <span id="closeTrailer" style="position:absolute; top:-40px; right:0; color:white; font-size:30px; cursor:pointer;">&times; إغلاق</span>
-            <iframe id="trailerFrame" width="100%" height="500" src="" frameborder="0" allowfullscreen style="border-radius:15px;"></iframe>
+            <span id="closeTrailer" style="position:absolute; top:-40px; right:0; color:white; font-size:30px; cursor:pointer;"><i class="fa-solid fa-xmark"></i> إغلاق</span>
+            <iframe id="trailerFrame" width="100%" height="500" src="" frameborder="0" allowfullscreen style="border-radius:15px; display: block;"></iframe>
         </div>
     </div>
 
@@ -172,11 +173,12 @@
         async function fetchContent() {
             if(!id) return;
             try {
+                // تم تعديل طلبات الـ API لتفضيل اللغة الإنجليزية في الأسماء
                 const [resAR, resEN, resVid, resSim] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=ar-SA`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=credits`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`),
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${API_KEY}&language=ar-SA`)
+                    fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${API_KEY}&language=en-US`)
                 ]);
 
                 const dataAR = await resAR.json();
@@ -184,9 +186,10 @@
                 const vids = await resVid.json();
                 const similar = await resSim.json();
 
-                // البيانات الأساسية
-                document.getElementById('movieTitle').innerText = dataAR.title || dataAR.name || dataEN.title || dataEN.name;
-                document.getElementById('movieOverview').innerText = dataAR.overview || dataEN.overview || "الوصف غير متوفر بالعربية.";
+                // عرض الاسم بالإنجليزية
+                document.getElementById('movieTitle').innerText = dataEN.title || dataEN.name;
+                // القصة تظل بالعربية كما هي
+                document.getElementById('movieOverview').innerText = dataAR.overview || dataEN.overview || "الوصف غير متوفر.";
                 document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${dataEN.poster_path}`;
                 document.getElementById('heroSection').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${dataEN.backdrop_path})`;
                 
@@ -201,7 +204,7 @@
                     if(c.profile_path) castBox.innerHTML += `<div class="cast-item blur-item"><img src="https://image.tmdb.org/t/p/w200${c.profile_path}"><p>${c.name}</p></div>`;
                 });
 
-                // أعمال مشابهة (إصلاح النقص)
+                // أعمال مشابهة (الأسماء بالإنجليزية)
                 const relBox = document.getElementById('relatedGrid');
                 similar.results?.slice(0, 6).forEach(item => {
                     relBox.innerHTML += `
@@ -218,7 +221,7 @@
                     dataEN.seasons?.filter(s => s.season_number > 0).forEach(s => {
                         const card = document.createElement('div');
                         card.className = 'item-card blur-item';
-                        card.innerHTML = `<div class="item-badge">الموسم ${s.season_number}</div><img src="https://image.tmdb.org/t/p/w300${s.poster_path || ''}"><div class="item-info"><b>الموسم ${s.season_number}</b></div>`;
+                        card.innerHTML = `<div class="item-badge">Season ${s.season_number}</div><img src="https://image.tmdb.org/t/p/w300${s.poster_path || ''}"><div class="item-info"><b>Season ${s.season_number}</b></div>`;
                         card.onclick = () => loadEpisodes(s.season_number);
                         sGrid.appendChild(card);
                     });
@@ -239,14 +242,14 @@
         async function loadEpisodes(sn) {
             const area = document.getElementById('episodesArea');
             const grid = document.getElementById('episodesGrid');
-            grid.innerHTML = '<p style="padding:20px; color:var(--primary);">جاري تحميل الحلقات...</p>';
+            grid.innerHTML = '<p style="padding:20px; color:var(--primary);">Loading Episodes...</p>';
             area.style.display = 'block';
             area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=ar-SA`);
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=en-US`);
             const data = await res.json();
             grid.innerHTML = '';
             data.episodes?.forEach(e => {
-                grid.innerHTML += `<div class="item-card blur-item"><div class="item-badge">الحلقة ${e.episode_number}</div><img src="https://image.tmdb.org/t/p/w300${e.still_path || ''}"><div class="item-info"><b>الحلقة ${e.episode_number} مترجمة</b></div></div>`;
+                grid.innerHTML += `<div class="item-card blur-item"><div class="item-badge">Episode ${e.episode_number}</div><img src="https://image.tmdb.org/t/p/w300${e.still_path || ''}"><div class="item-info"><b>Episode ${e.episode_number}</b></div></div>`;
             });
         }
 
