@@ -6,12 +6,14 @@
     <title>WatchGo - Pro Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- كودك الأصلي بدون أي تعديل --- */
+        /* --- كود الديسكتوب الأصلي (بدون أي تغيير) --- */
         :root { 
             --primary: #9b51e0; 
             --bg-dark: #050505; 
             --card-bg: rgba(20, 20, 20, 0.95);
             --transition: 0.3s ease;
+            --red-accent: #ff4b5c;
+            --yellow-accent: #ffcc00;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,7 +59,6 @@
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 5%, transparent 100%); display: flex; flex-direction: column; justify-content: center; padding: 0 80px; }
         .slide-title { font-size: 40px; font-weight: 900; margin-bottom: 20px; }
         .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 10px; width: fit-content; transition: 0.3s; }
-        .hero-btn:hover { transform: scale(1.05); background: #fff; color: var(--primary); }
 
         .container { padding: 30px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; }
         .section-box { margin-bottom: 40px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); }
@@ -76,15 +77,60 @@
         .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; font-size: 11px; }
         .side-item img { width: 45px; height: 65px; border-radius: 5px; object-fit: cover; }
 
-        /* --- إضافات الموبايل فقط (بدون التأثير على الديسكتوب) --- */
+        /* --- إضافات الموبايل فقط (التعديلات الجديدة) --- */
         @media (max-width: 768px) {
-            .mobile-ui { display: flex !important; flex-wrap: wrap; gap: 10px; margin-top: 15px; justify-content: center; }
-            .m-red { background: #ff4b5c; flex: 1; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; text-decoration: none; color: white; }
-            .m-yellow { background: #ffcc00; flex: 1; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; text-decoration: none; color: black; }
-            .news-m { background: #ff4b5c; padding: 5px 15px; border-radius: 20px; font-size: 12px; margin-bottom: 100px; display: block !important; width: fit-content; }
+            .header { padding: 0 15px; height: 60px; border-bottom: none; }
+            .main-nav { display: none; } /* إخفاء المنيو في الموبايل */
+            
+            #heroSection { height: 420px !important; }
+            .slide-overlay { 
+                padding: 15px !important; 
+                justify-content: flex-end !important; 
+                padding-bottom: 25px !important;
+                background: linear-gradient(to top, #050505 40%, transparent 100%) !important;
+                text-align: center;
+            }
+            .slide-title { font-size: 20px !important; margin-bottom: 15px !important; }
+
+            /* شارة الأخبار مثل الصورة */
+            .news-m-badge {
+                display: block !important;
+                background: var(--red-accent);
+                color: white;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                position: absolute;
+                top: 75px;
+                right: 15px;
+                font-weight: bold;
+            }
+
+            /* أزرار الموبايل الملونة */
+            .mobile-action-area {
+                display: flex !important;
+                gap: 8px;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .m-btn {
+                flex: 1;
+                padding: 12px 5px;
+                border-radius: 8px;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+            }
+            .m-btn-red { background: var(--red-accent); color: white; }
+            .m-btn-yellow { background: var(--yellow-accent); color: black; }
+
+            .hero-btn { display: none !important; } /* إخفاء زر الديسكتوب */
             .container { grid-template-columns: 1fr; padding: 15px; }
-            .sidebar { display: none; }
-            .hero-btn { display: none; } /* إخفاء زرار الديسكتوب في الموبايل */
+            .sidebar { display: none !important; } /* إخفاء الجوانب في الموبايل */
         }
     </style>
 </head>
@@ -101,15 +147,15 @@
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#">أفلام أجنبية</a>
-                    <a href="#">أفلام نتفليكس</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', '')">أفلام أجنبية</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a>
                 </div>
             </li>
             <li class="nav-item">
                 <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#">مسلسلات حديثة</a>
-                    <a href="#">الدراما الكورية</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'أحدث المسلسلات', '')">مسلسلات حديثة</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'دراما كورية', 'ko')">الدراما الكورية</a>
                 </div>
             </li>
         </ul>
@@ -118,16 +164,16 @@
     <section id="heroSection">
         <div class="slider-wrapper">
             <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original/m9YpS2rE1v24BvQun7zR73L03p9.jpg');">
+                <div class="news-m-badge" style="display: none;">آخر الأخبار</div>
+
                 <div class="slide-overlay">
-                    <div class="news-m" style="display: none;">آخر الأخبار</div>
-                    
-                    <h1 class="slide-title">The Wrecking Crew</h1>
+                    <h1 class="slide-title">فيلم The Wrecking Crew مترجم اون لاين</h1>
                     
                     <a href="#" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
 
-                    <div class="mobile-ui" style="display: none;">
-                        <a href="#" class="m-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
-                        <a href="#" class="m-yellow">العضوية المميزة</a>
+                    <div class="mobile-action-area" style="display: none;">
+                        <a href="#" class="m-btn m-btn-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
+                        <a href="#" class="m-btn m-btn-yellow">العضوية المميزة</a>
                     </div>
                 </div>
             </div>
@@ -154,7 +200,7 @@
                             <span class="watch-btn">مشاهدة</span>
                         </div>
                     </div>
-                </div>
+                    </div>
             </div>
         </main>
 
