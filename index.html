@@ -283,16 +283,29 @@
         }
 
         function renderSlider(movies) {
-            const wrapper = document.getElementById('sliderWrapper');
-            wrapper.innerHTML = movies.map(m => `
-                <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original${m.backdrop_path}')">
-                    <div class="slide-overlay">
-                        <h2 class="slide-title">${m.title}</h2>
-                        <a href="movie.html?id=${m.id}&type=movie" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
-                    </div>
-                </div>`).join('');
-            let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 6000);
-        }
+    const wrapper = document.getElementById('sliderWrapper');
+    wrapper.innerHTML = movies.map(m => `
+        <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original${m.backdrop_path}')">
+            <div class="slide-overlay">
+                <h2 class="slide-title">${m.title}</h2>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <a href="movie.html?id=${m.id}&type=movie" class="hero-btn">
+                        <i class="fa-solid fa-play"></i> شاهد الآن
+                    </a>
+                    <a href="movie.html?id=${m.id}&type=movie&trailer=1" class="hero-btn" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);">
+                        <i class="fa-solid fa-circle-play"></i> الإعلان
+                    </a>
+                </div>
+            </div>
+        </div>`).join('');
+    
+    let i = 0; 
+    setInterval(() => { 
+        i = (i + 1) % 5; 
+        wrapper.style.transform = `translateX(${i * 100}%)`; 
+    }, 6000);
+}
+
 
         async function showCategory(endpoint, title, param) {
             // إغلاق المنيو لو مفتوح
