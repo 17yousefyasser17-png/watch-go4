@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WatchGo - Premium Cinematic UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="mobile-movie.css" media="screen and (max-width: 1024px)">
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root { 
@@ -173,7 +176,6 @@
         async function fetchContent() {
             if(!id) return;
             try {
-                // تم تعديل طلبات الـ API لتفضيل اللغة الإنجليزية في الأسماء
                 const [resAR, resEN, resVid, resSim] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=ar-SA`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=credits`),
@@ -186,9 +188,7 @@
                 const vids = await resVid.json();
                 const similar = await resSim.json();
 
-                // عرض الاسم بالإنجليزية
                 document.getElementById('movieTitle').innerText = dataEN.title || dataEN.name;
-                // القصة تظل بالعربية كما هي
                 document.getElementById('movieOverview').innerText = dataAR.overview || dataEN.overview || "الوصف غير متوفر.";
                 document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${dataEN.poster_path}`;
                 document.getElementById('heroSection').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${dataEN.backdrop_path})`;
@@ -198,13 +198,11 @@
                 document.getElementById('detYear').innerText = (dataEN.release_date || dataEN.first_air_date || '').split('-')[0];
                 document.getElementById('detLang').innerText = dataEN.original_language?.toUpperCase();
 
-                // طاقم التمثيل
                 const castBox = document.getElementById('castContainer');
                 dataEN.credits?.cast.slice(0, 10).forEach(c => {
                     if(c.profile_path) castBox.innerHTML += `<div class="cast-item blur-item"><img src="https://image.tmdb.org/t/p/w200${c.profile_path}"><p>${c.name}</p></div>`;
                 });
 
-                // أعمال مشابهة (الأسماء بالإنجليزية)
                 const relBox = document.getElementById('relatedGrid');
                 similar.results?.slice(0, 6).forEach(item => {
                     relBox.innerHTML += `
@@ -214,7 +212,6 @@
                         </a>`;
                 });
 
-                // المسلسلات
                 if(type === 'tv') {
                     document.getElementById('seriesSection').style.display = 'block';
                     const sGrid = document.getElementById('seasonsGrid');
@@ -227,7 +224,6 @@
                     });
                 }
 
-                // التريلر
                 const trailer = vids.results?.find(v => v.type === 'Trailer');
                 if(trailer) {
                     document.getElementById('openTrailer').onclick = () => {
