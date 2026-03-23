@@ -25,7 +25,7 @@
             filter: blur(100px); z-index: -1;
         }
 
-        /* --- الهيدر (إصلاح مكان المسلسلات الكاملة) --- */
+        /* --- الهيدر --- */
         .header { 
             background: #0a0a0a; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -53,6 +53,36 @@
         .nav-item:hover .nav-link i { transform: rotate(180deg); }
         .dropdown a { color: #eee; padding: 12px 20px; text-decoration: none; font-size: 13px; border-bottom: 1px solid #222; text-align: right; }
         .dropdown a:hover { background: #1a1a1a; color: var(--primary); }
+
+        /* --- تنسيق زر الـ 3 شرط الجديد (الدايرة) --- */
+        .header-icons { display: flex; align-items: center; gap: 15px; }
+        .menu-circle-btn {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 1px solid var(--primary); display: flex;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+            background: rgba(155, 81, 224, 0.05);
+        }
+        .menu-circle-btn:hover { background: rgba(155, 81, 224, 0.2); transform: scale(1.05); }
+        .menu-circle-btn i { color: white; font-size: 18px; }
+
+        /* --- القائمة الجانبية (Sidebar) --- */
+        .mobile-sidebar {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
+            background: #0a0a0a; z-index: 9999; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 25px; overflow-y: auto; border-left: 2px solid var(--primary);
+        }
+        .mobile-sidebar.open { right: 0; }
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 9998; display: none; backdrop-filter: blur(4px);
+        }
+        .sidebar-overlay.open { display: block; }
+        .close-menu { color: #888; margin-bottom: 25px; cursor: pointer; text-align: left; }
+        .sidebar-content h3 { color: var(--primary); font-size: 16px; margin: 25px 0 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .sidebar-content ul { list-style: none; }
+        .sidebar-content li a { display: block; padding: 10px 0; color: #ccc; text-decoration: none; font-size: 14px; transition: 0.2s; }
+        .sidebar-content li a:hover { color: var(--primary); padding-right: 10px; }
 
         /* --- السلايدر --- */
         #heroSection { width: 100%; height: 450px; position: relative; overflow: hidden; }
@@ -117,8 +147,37 @@
             <li class="nav-item"><a class="nav-link" href="#">مسلسلات كاملة</a></li>
         </ul>
 
-        <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer; font-size: 20px;"></i></div>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer; font-size: 20px;"></i>
+            <div class="menu-circle-btn" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
     </header>
+
+    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="close-menu" onclick="toggleMobileMenu()"><i class="fa-solid fa-xmark"></i> إغلاق</div>
+        <div class="sidebar-content">
+            <h3><i class="fa-solid fa-film"></i> الأفلام</h3>
+            <ul>
+                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام عربية ومصرية', 'ar')">أفلام عربية ومصرية</a></li>
+                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', '')">أفلام أجنبية</a></li>
+                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a></li>
+            </ul>
+            <h3><i class="fa-solid fa-tv"></i> المسلسلات</h3>
+            <ul>
+                <li><a href="#" onclick="showCategory('discover/tv', 'مسلسلات مصرية', 'eg')">مسلسلات مصرية</a></li>
+                <li><a href="#" onclick="showCategory('discover/tv', 'مسلسلات عربية', 'ar')">مسلسلات عربية</a></li>
+                <li><a href="#" onclick="showCategory('discover/tv', 'دراما كورية', 'ko')">الدراما الكورية</a></li>
+            </ul>
+            <h3><i class="fa-solid fa-ghost"></i> الأنمي</h3>
+            <ul>
+                <li><a href="#" onclick="showCategory('discover/tv', 'أحدث حلقات الأنمي', '16')">أحدث الحلقات</a></li>
+                <li><a href="#" onclick="showCategory('discover/tv', 'قائمة الأنميات', '16')">قائمة الأنميات</a></li>
+            </ul>
+        </div>
+    </div>
 
     <div id="searchBox">
         <input type="text" id="searchInput" placeholder="اكتب اسم الفيلم أو المسلسل هنا..." onkeyup="searchApi(this.value)">
@@ -155,6 +214,12 @@
     <script>
         const API_KEY = 'b838a848a571a893e6b0effe4bd53db8';
         const BASE_URL = 'https://api.themoviedb.org/3';
+
+        // دالة فتح المنيو
+        function toggleMobileMenu() {
+            document.getElementById('mobileSidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('open');
+        }
 
         function toggleSearch() { 
             const s = document.getElementById("searchBox");
@@ -229,12 +294,22 @@
             let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 6000);
         }
 
-        async function showCategory(endpoint, title, genreId) {
+        async function showCategory(endpoint, title, param) {
+            // إغلاق المنيو لو مفتوح
+            if(document.getElementById('mobileSidebar').classList.contains('open')) toggleMobileMenu();
+            
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
             document.getElementById('fullTitle').innerText = title;
-            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}`;
-            if(genreId) url += `&with_genres=${genreId}`;
+            
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=ar`;
+            
+            if(param === 'ar') url += `&with_original_language=ar`;
+            else if(param === 'eg') url += `&with_original_language=ar&with_origin_country=EG`;
+            else if(param === '16') url += `&with_genres=16`;
+            else if(param === '213') url += `&with_networks=213`;
+            else if(param === 'ko') url += `&with_original_language=ko`;
+
             const res = await fetch(url);
             const data = await res.json();
             document.getElementById('fullGrid').innerHTML = data.results.map(m => createCard(m, endpoint.includes('tv') ? 'tv' : 'movie')).join('');
