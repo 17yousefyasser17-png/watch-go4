@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchGo - Pro Cinema Hub</title>
+    <title>WatchGo - Elite Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
             --primary: #9b51e0; 
             --bg-dark: #050505; 
             --card-bg: rgba(20, 20, 20, 0.95);
-            --glass: rgba(155, 81, 224, 0.05);
-            --transition: 0.3s ease;
+            --transition: 0.4s ease;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* تأثير التوهج الخلفي */
+        /* تأثير الخلفية البنفسجي */
         body::before {
             content: ""; position: fixed; inset: 0;
             background: radial-gradient(circle at 50% 50%, rgba(155, 81, 224, 0.1) 0%, transparent 80%);
@@ -43,46 +42,60 @@
         }
         .nav-item:hover .dropdown { display: block; }
         .dropdown a { color: #eee; padding: 12px 20px; text-decoration: none; display: block; font-size: 13px; text-align: right; border-bottom: 1px solid #222; }
-        .dropdown a:hover { background: #1a1a1a; color: var(--primary); }
 
-        /* --- السلايدر --- */
+        /* --- السلايدر العلوي --- */
         #heroSection { width: 100%; height: 320px; position: relative; overflow: hidden; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease; }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center top; position: relative; }
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 10%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 60px; }
 
-        /* --- المحتوى الرئيسي (شبكة + 2 سايد بار) --- */
-        .container { padding: 30px 40px; display: grid; grid-template-columns: 250px 1fr 250px; gap: 20px; }
+        /* --- محاذاة الصفحة (3 أعمدة) --- */
+        .container { padding: 30px 40px; display: grid; grid-template-columns: 260px 1fr 260px; gap: 25px; }
 
-        .section-box { background: var(--glass); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); margin-bottom: 30px; }
-        .section-title { color: var(--primary); font-size: 16px; font-weight: bold; margin-bottom: 15px; border-right: 3px solid var(--primary); padding-right: 10px; }
+        /* --- الأقسام مع أسهم التحريك --- */
+        .section-box { position: relative; margin-bottom: 40px; }
+        .section-title { color: var(--primary); font-size: 17px; font-weight: bold; margin-bottom: 15px; border-right: 4px solid var(--primary); padding-right: 12px; }
 
-        /* حاوية الحركة العرضية (Carousel) */
-        .scroll-container { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; scroll-behavior: smooth; scrollbar-width: none; }
+        .carousel-wrapper { position: relative; display: flex; align-items: center; }
+        
+        /* أزرار الأسهم */
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(155, 81, 224, 0.8); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            z-index: 10; opacity: 0; transition: 0.3s;
+        }
+        .carousel-wrapper:hover .nav-btn { opacity: 1; }
+        .prev-btn { right: -20px; }
+        .next-btn { left: -20px; }
+
+        .scroll-container { 
+            display: flex; overflow-x: auto; gap: 15px; padding: 10px 0;
+            scroll-behavior: smooth; scrollbar-width: none; 
+        }
         .scroll-container::-webkit-scrollbar { display: none; }
 
-        .item-card { min-width: 150px; background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; cursor: pointer; position: relative; }
-        .item-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .item-card img { width: 100%; height: 210px; object-fit: cover; }
-        
-        .item-info { padding: 8px; text-align: center; }
-        .item-name { font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
-        .watch-btn { background: var(--primary); color: #fff; font-size: 10px; padding: 5px; border-radius: 4px; display: block; font-weight: bold; }
+        .item-card { min-width: 160px; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: var(--transition); cursor: pointer; position: relative; }
+        .item-card:hover { transform: scale(1.05); border-color: var(--primary); }
+        .item-card img { width: 100%; height: 230px; object-fit: cover; }
+        .item-info { padding: 10px; text-align: center; }
+        .item-name { font-size: 12px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .watch-btn { background: var(--primary); color: #fff; font-size: 10px; padding: 6px; border-radius: 4px; display: block; font-weight: bold; text-decoration: none; }
 
-        /* بـارات الجـوانب (Sidebars) */
-        .sidebar { background: rgba(10, 10, 10, 0.6); padding: 15px; border-radius: 10px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; }
-        .side-title { color: var(--primary); font-size: 14px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; font-size: 11px; transition: 0.3s; }
+        /* البارات الجانبية */
+        .sidebar { background: rgba(10, 10, 10, 0.6); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; }
+        .side-title { color: var(--primary); font-size: 15px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; font-size: 11px; }
         .side-item:hover { color: var(--primary); transform: translateX(-5px); }
-        .side-item img { width: 40px; height: 55px; border-radius: 4px; object-fit: cover; }
+        .side-item img { width: 45px; height: 65px; border-radius: 5px; object-fit: cover; }
 
-        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
         .hidden { display: none !important; }
 
-        #searchBox { display: none; padding: 15px; background: #0a0a0a; text-align: center; }
-        #searchBox input { width: 80%; padding: 10px 20px; border-radius: 30px; border: 1px solid var(--primary); background: #111; color: #fff; outline: none; }
+        #searchBox { display: none; padding: 15px; background: #000; text-align: center; }
+        #searchBox input { width: 80%; padding: 12px; border-radius: 25px; border: 1px solid var(--primary); background: #111; color: #fff; outline: none; }
 
-        @media (max-width: 1100px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
+        @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
     </style>
 </head>
 <body>
@@ -90,43 +103,53 @@
     <header class="header">
         <a href="index.html" class="logo-ctn">
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
-            <span style="font-weight: bold; font-size: 18px;">WATCHGO</span>
+            <span style="font-weight: bold; font-size: 20px;">WATCHGO</span>
         </a>
         <ul class="main-nav">
             <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبي', '')">أفلام أجنبي</a>
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أنمي', '16')">أفلام أنمي</a>
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبي كاملة', '')">أفلام أجنبي</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أنمي كاملة', '16')">أفلام أنمي</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس كاملة', '213')">أفلام نتفليكس</a>
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link" onclick="showCategory('discover/tv', 'المسلسلات', '')">المسلسلات</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="showCategory('discover/tv', 'المسلسلات الكاملة', '')">المسلسلات</a></li>
         </ul>
         <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer"></i></div>
     </header>
 
-    <div id="searchBox"><input type="text" placeholder="ابحث هنا..." onkeyup="searchApi(this.value)"></div>
+    <div id="searchBox"><input type="text" placeholder="ابحث عن فيلمك المفضل..." onkeyup="searchApi(this.value)"></div>
     <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
 
     <div class="container">
         <aside class="sidebar">
-            <div class="side-title"><i class="fa-solid fa-tv"></i> آخر الحلقات</div>
+            <div class="side-title"><i class="fa-solid fa-clapperboard"></i> أحدث الحلقات</div>
             <div id="episodesSide"></div>
         </aside>
 
         <main class="main-col">
             <div id="homeView">
                 <section class="section-box">
-                    <div class="section-title"><i class="fa-solid fa-fire"></i> أفلام أجنبي (تحريك عرضي)</div>
-                    <div class="scroll-container" id="popularScroll"></div>
+                    <div class="section-title"><i class="fa-solid fa-globe"></i> أفلام أجنبي حديثة</div>
+                    <div class="carousel-wrapper">
+                        <button class="nav-btn prev-btn" onclick="slide('foreignScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="scroll-container" id="foreignScroll"></div>
+                        <button class="nav-btn next-btn" onclick="slide('foreignScroll', 'left')"><i class="fa-solid fa-chevron-left"></i></button>
+                    </div>
                 </section>
+
                 <section class="section-box">
                     <div class="section-title"><i class="fa-solid fa-n"></i> أفلام نتفليكس</div>
-                    <div class="scroll-container" id="netflixScroll"></div>
+                    <div class="carousel-wrapper">
+                        <button class="nav-btn prev-btn" onclick="slide('netflixScroll', 'right')"><i class="fa-solid fa-chevron-right"></i></button>
+                        <div class="scroll-container" id="netflixScroll"></div>
+                        <button class="nav-btn next-btn" onclick="slide('netflixScroll', 'left')"><i class="fa-solid fa-chevron-left"></i></button>
+                    </div>
                 </section>
             </div>
+
             <div id="fullView" class="hidden">
                 <div class="section-box">
                     <div class="section-title" id="fullTitle"></div>
@@ -136,7 +159,7 @@
         </main>
 
         <aside class="sidebar">
-            <div class="side-title"><i class="fa-solid fa-ghost"></i> أحدث الأنميات</div>
+            <div class="side-title"><i class="fa-solid fa-ghost"></i> أنمي مضاف حديثاً</div>
             <div id="animeSide"></div>
         </aside>
     </div>
@@ -148,6 +171,13 @@
         function toggleSearch() { 
             const s = document.getElementById("searchBox");
             s.style.display = (s.style.display === "block") ? "none" : "block"; 
+        }
+
+        // وظيفة تحريك الأسهم
+        function slide(id, direction) {
+            const container = document.getElementById(id);
+            const scrollAmount = 300;
+            container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
         }
 
         function createCard(m, type) {
@@ -167,6 +197,7 @@
             document.getElementById('fullTitle').innerText = title;
             let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`;
             if(genreId) url += `&with_genres=${genreId}`;
+            if(title.includes('نتفليكس')) url += `&with_networks=213`;
             const res = await fetch(url);
             const data = await res.json();
             document.getElementById('fullGrid').innerHTML = data.results.map(m => createCard(m, endpoint.includes('tv') ? 'tv' : 'movie')).join('');
@@ -178,9 +209,9 @@
             const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
             const popData = await pop.json();
             renderSlider(popData.results.slice(0, 5));
-            document.getElementById('popularScroll').innerHTML = popData.results.map(m => createCard(m, 'movie')).join('');
+            document.getElementById('foreignScroll').innerHTML = popData.results.map(m => createCard(m, 'movie')).join('');
 
-            // البارات الجانبية (مثل الفيديو)
+            // البارات
             const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}`);
             const epData = await ep.json();
             document.getElementById('episodesSide').innerHTML = epData.results.slice(0, 8).map(m => `
@@ -197,7 +228,6 @@
                     <div>${m.title}</div>
                 </div>`).join('');
 
-            // نتفليكس
             const net = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_networks=213`);
             const netData = await net.json();
             document.getElementById('netflixScroll').innerHTML = netData.results.map(m => createCard(m, 'movie')).join('');
@@ -207,7 +237,7 @@
             const wrapper = document.getElementById('sliderWrapper');
             wrapper.innerHTML = movies.map(m => `
                 <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original${m.backdrop_path}')">
-                    <div class="slide-overlay"><h2 style="font-size:24px;">${m.title}</h2></div>
+                    <div class="slide-overlay"><h2>${m.title}</h2></div>
                 </div>`).join('');
             let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 5000);
         }
