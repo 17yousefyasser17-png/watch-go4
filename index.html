@@ -6,13 +6,12 @@
     <title>WatchGo - Pro Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* --- كودك الأصلي بدون أي تعديل --- */
         :root { 
             --primary: #9b51e0; 
             --bg-dark: #050505; 
             --card-bg: rgba(20, 20, 20, 0.95);
             --transition: 0.3s ease;
-            --red-accent: #ff4b5c;
-            --yellow-accent: #ffcc00;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +23,6 @@
             filter: blur(100px); z-index: -1;
         }
 
-        /* --- الهيدر (الأصلي مع إضافات الموبايل) --- */
         .header { 
             background: #0a0a0a; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -53,10 +51,6 @@
         .dropdown a { color: #eee; padding: 12px 20px; text-decoration: none; font-size: 13px; border-bottom: 1px solid #222; text-align: right; }
         .dropdown a:hover { background: #1a1a1a; color: var(--primary); }
 
-        /* أيقونات الموبايل المخفية في الديسكتوب */
-        .mobile-only { display: none; }
-
-        /* --- السلايدر --- */
         #heroSection { width: 100%; height: 450px; position: relative; overflow: hidden; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center 15%; position: relative; }
@@ -65,83 +59,38 @@
         .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 10px; width: fit-content; transition: 0.3s; }
         .hero-btn:hover { transform: scale(1.05); background: #fff; color: var(--primary); }
 
-        /* --- محتوى الشبكة --- */
         .container { padding: 30px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; }
         .section-box { margin-bottom: 40px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); }
         .section-title { color: var(--primary); font-size: 18px; font-weight: bold; margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 12px; }
         .grid-display { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
-        .item-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; cursor: pointer; position: relative; }
+        .item-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
         .item-card:hover { transform: translateY(-8px); border-color: var(--primary); }
         .item-card img { width: 100%; height: 230px; object-fit: cover; }
         .item-info { padding: 10px; text-align: center; }
         .item-name { font-size: 12px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .watch-btn { background: var(--primary); color: #fff; font-size: 10px; padding: 6px; border-radius: 4px; font-weight: bold; }
 
-        /* البارات الجانبية */
         .sidebar { background: rgba(10, 10, 10, 0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; position: sticky; top: 90px; }
         .side-title { color: var(--primary); font-size: 14px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; text-align: center; }
         .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; font-size: 11px; }
-        .side-item img { width: 45px; height: 65px; border-radius: 50px; object-fit: cover; }
+        .side-item img { width: 45px; height: 65px; border-radius: 5px; object-fit: cover; }
 
-        /* --- ميديا كويري: تعديلات واجهة الموبايل فقط --- */
+        /* --- إضافات الموبايل فقط (بدون التأثير على الديسكتوب) --- */
         @media (max-width: 768px) {
-            .header { padding: 0 15px; border-bottom: none; height: 65px; background: #000; }
-            .main-nav { display: none; } /* إخفاء منيو الديسكتوب */
-            .mobile-only { display: flex !important; align-items: center; gap: 15px; font-size: 20px; }
-            
+            .mobile-ui { display: flex !important; flex-wrap: wrap; gap: 10px; margin-top: 15px; justify-content: center; }
+            .m-red { background: #ff4b5c; flex: 1; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; text-decoration: none; color: white; }
+            .m-yellow { background: #ffcc00; flex: 1; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; text-decoration: none; color: black; }
+            .news-m { background: #ff4b5c; padding: 5px 15px; border-radius: 20px; font-size: 12px; margin-bottom: 100px; display: block !important; width: fit-content; }
             .container { grid-template-columns: 1fr; padding: 15px; }
-            .sidebar { display: none; } /* إخفاء الجوانب في الموبايل */
-
-            #heroSection { height: 500px !important; }
-            .slide-overlay { padding: 20px; align-items: center; text-align: center; }
-            .slide-title { font-size: 28px; }
-
-            /* زرار آخر الأخبار اللي في الصورة */
-            .news-badge {
-                display: block !important;
-                background: var(--red-accent);
-                padding: 6px 18px;
-                border-radius: 25px;
-                font-size: 13px;
-                font-weight: bold;
-                margin-bottom: 150px; /* لرفعه للأعلى مثل الصورة */
-            }
-
-            /* الأزرار الملونة الجديدة */
-            .mobile-action-btns {
-                display: flex !important;
-                gap: 10px;
-                width: 100%;
-                margin-top: 15px;
-            }
-            .m-btn {
-                flex: 1;
-                padding: 12px;
-                border-radius: 10px;
-                font-weight: bold;
-                text-decoration: none;
-                font-size: 14px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-            .m-btn-red { background: var(--red-accent); color: white; }
-            .m-btn-yellow { background: var(--yellow-accent); color: black; }
-            
-            /* إخفاء زرار الهيرو الأصلي في الموبايل */
-            .hero-btn { display: none; }
+            .sidebar { display: none; }
+            .hero-btn { display: none; } /* إخفاء زرار الديسكتوب في الموبايل */
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="mobile-only">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-
         <a href="index.html" class="logo-ctn">
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
             <span style="font-weight: bold; font-size: 22px;">WATCHGO</span>
@@ -164,25 +113,21 @@
                 </div>
             </li>
         </ul>
-
-        <div class="mobile-only">
-            <i class="fa-solid fa-bars"></i>
-        </div>
     </header>
 
     <section id="heroSection">
         <div class="slider-wrapper">
             <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original/m9YpS2rE1v24BvQun7zR73L03p9.jpg');">
                 <div class="slide-overlay">
-                    <div class="news-badge" style="display: none;">آخر الأخبار</div>
+                    <div class="news-m" style="display: none;">آخر الأخبار</div>
                     
                     <h1 class="slide-title">The Wrecking Crew</h1>
                     
                     <a href="#" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
 
-                    <div class="mobile-action-btns" style="display: none;">
-                        <a href="#" class="m-btn m-btn-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
-                        <a href="#" class="m-btn m-btn-yellow">العضوية المميزة</a>
+                    <div class="mobile-ui" style="display: none;">
+                        <a href="#" class="m-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
+                        <a href="#" class="m-yellow">العضوية المميزة</a>
                     </div>
                 </div>
             </div>
@@ -194,7 +139,7 @@
             <h3 class="side-title">أفلام مختارة</h3>
             <div class="side-item">
                 <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg">
-                <span>اسم الفيلم المقترح</span>
+                <span>اسم الفيلم</span>
             </div>
         </aside>
 
@@ -209,13 +154,13 @@
                             <span class="watch-btn">مشاهدة</span>
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
         </main>
 
         <aside class="sidebar">
             <h3 class="side-title">الأكثر مشاهدة</h3>
-            </aside>
+        </aside>
     </div>
 
 </body>
