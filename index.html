@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchGo - Professional Cinema</title>
+    <title>WatchGo - الصفحة الرئيسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
@@ -20,13 +20,15 @@
             background-attachment: fixed; background-size: cover; background-position: center;
             color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden;
         }
+        /* طبقة التعتيم لضمان انسيابية الخلفية */
         body::before { content: ""; position: fixed; inset: 0; background: rgba(5, 5, 5, 0.9); z-index: -1; }
 
-        /* --- الهيدر --- */
+        /* --- الهيدر (ستايل توب سينما) --- */
         .header { 
             background: rgba(10, 10, 10, 0.98); padding: 12px 40px; 
             display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000;
+            backdrop-filter: blur(15px);
         }
         .nav-right { display: flex; align-items: center; gap: 25px; }
         .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: bold; }
@@ -35,103 +37,95 @@
         .nav-link { color: #ddd; text-decoration: none; font-size: 14px; font-weight: 600; padding: 10px; transition: 0.3s; cursor: pointer; }
         .nav-link:hover { color: var(--primary); }
 
-        /* --- السلايدر --- */
-        #heroSection { width: 100%; height: 350px; position: relative; overflow: hidden; }
+        /* القائمة المنسدلة */
+        .dropdown {
+            display: none; position: absolute; top: 100%; right: 0; 
+            background: #111; min-width: 180px; border-radius: 5px; border: 1px solid #333;
+        }
+        .nav-item:hover .dropdown { display: block; }
+        .dropdown a { color: #eee; padding: 12px; text-decoration: none; display: block; font-size: 13px; border-bottom: 1px solid #222; }
+        .dropdown a:hover { background: var(--primary); }
+
+        /* --- السلايدر المصغر المدمج --- */
+        #heroSection { width: 100%; height: 350px; position: relative; overflow: hidden; margin-bottom: 0; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease; }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #050505 5%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 60px; }
-
-        /* --- صفحة تفاصيل الفيلم --- */
-        #movieDetailsPage { display: none; padding: 40px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.5s; }
-        .detail-container { display: flex; gap: 30px; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid #333; }
-        .detail-poster { width: 300px; border-radius: 10px; border: 2px solid var(--primary); box-shadow: 0 0 20px rgba(155, 81, 224, 0.3); }
-        .detail-info { flex: 1; }
-        .action-btns { display: flex; gap: 15px; margin-top: 25px; }
-        .btn { padding: 12px 25px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; text-decoration: none; color: white; }
-        .btn-watch { background: var(--primary); }
-        .btn-download { background: #222; border: 1px solid #444; }
-        .btn:hover { transform: scale(1.05); opacity: 0.9; }
-
-        /* --- المشغل (يظهر عند الضغط على مشاهدة) --- */
-        #playerContainer { display: none; margin-top: 30px; width: 100%; aspect-ratio: 16/9; background: #000; border: 2px solid var(--primary); border-radius: 10px; }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* --- الممثلين --- */
-        .cast-list { display: flex; gap: 15px; overflow-x: auto; padding: 20px 0; }
-        .cast-item { min-width: 90px; text-align: center; }
-        .cast-item img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #444; }
+        .slide-overlay { 
+            position: absolute; inset: 0; 
+            background: linear-gradient(to top, #050505 5%, transparent 100%); 
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 40px 60px; 
+        }
 
         /* --- شبكة الأفلام --- */
         .main-content { padding: 30px 40px; }
+        .section-label { background: var(--primary); display: inline-block; padding: 5px 15px; border-radius: 4px; margin-bottom: 25px; font-weight: bold; font-size: 14px; }
         .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 20px; }
-        .movie-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #333; transition: var(--transition); cursor: pointer; position: relative; }
-        .movie-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        
+        .movie-card { 
+            background: var(--card-bg); border-radius: 10px; overflow: hidden; 
+            border: 1px solid #333; transition: var(--transition); cursor: pointer; position: relative;
+        }
+        .movie-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(155, 81, 224, 0.4); }
         .movie-card img { width: 100%; height: 245px; object-fit: cover; }
         .movie-badge { position: absolute; top: 10px; left: 10px; background: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         .movie-info { padding: 12px; text-align: center; font-size: 13px; font-weight: bold; }
+        .watch-text { color: var(--primary); font-size: 11px; margin-top: 5px; display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .back-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+        #searchBox { display: none; padding: 15px; background: #0a0a0a; text-align: center; border-bottom: 1px solid #222; }
+        #searchBox input { width: 80%; max-width: 500px; padding: 10px; border-radius: 20px; border: 1px solid var(--primary); background: #111; color: #fff; outline: none; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div class="nav-right">
-            <a href="#" class="logo" onclick="location.reload()">
+            <a href="index.html" class="logo">
                 <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
                 <span>WATCHGO</span>
             </a>
             <ul class="main-nav">
-                <li class="nav-item"><a class="nav-link" href="#" onclick="location.reload()">الرئيسية</a></li>
-                <li class="nav-item"><a class="nav-link">أفلام أجنبي</a></li>
-                <li class="nav-item"><a class="nav-link">مسلسلات</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                <li class="nav-item">
+                    <span class="nav-link">أفلام <i class="fa-solid fa-chevron-down"></i></span>
+                    <div class="dropdown">
+                        <a href="#" onclick="fetchApi('movie/top_rated')">الأعلى تقييماً</a>
+                        <a href="#" onclick="fetchApi('discover/movie', '28')">أكشن</a>
+                        <a href="#" onclick="fetchApi('discover/movie', '27')">رعب</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link">القسم الآسيوي</a></li>
             </ul>
         </div>
-        <div class="header-icons"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer"></i></div>
     </header>
 
-    <div id="homePage">
-        <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
-        <div class="main-content">
-            <h3 style="margin-bottom:20px; border-right: 4px solid var(--primary); padding-right:10px;">المضاف حديثاً</h3>
-            <div class="movies-grid" id="moviesGrid"></div>
-        </div>
+    <div id="searchBox"><input type="text" placeholder="ابحث عن فيلمك..." onkeyup="searchApi(this.value)"></div>
+
+    <div id="heroSection">
+        <div class="slider-wrapper" id="sliderWrapper"></div>
     </div>
 
-    <div id="movieDetailsPage">
-        <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</button>
-        
-        <div class="detail-container">
-            <img id="dPoster" class="detail-poster" src="">
-            <div class="detail-info">
-                <h1 id="dTitle" style="margin-bottom:10px;"></h1>
-                <div id="dMeta" style="color:var(--primary); font-weight:bold; margin-bottom:15px;"></div>
-                <p id="dStory" style="line-height:1.7; color:#ccc;"></p>
-                
-                <div class="action-btns">
-                    <button class="btn btn-watch" onclick="showPlayer()"><i class="fa-solid fa-play"></i> مشاهدة الآن</button>
-                    <button class="btn btn-download"><i class="fa-solid fa-download"></i> تحميل الآن</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="playerContainer"></div>
-
-        <h3 style="margin-top:40px; border-bottom:1px solid #333; padding-bottom:10px;">طاقم التمثيل</h3>
-        <div class="cast-list" id="dCast"></div>
+    <div class="main-content">
+        <div class="section-label">المضاف حديثاً</div>
+        <div class="movies-grid" id="moviesGrid"></div>
     </div>
 
     <script>
         const API_KEY = 'b838a848a571a893e6b0effe4bd53db8';
         const BASE_URL = 'https://api.themoviedb.org/3';
-        let currentMovie = { id: '', type: '' };
 
-        async function fetchInitial() {
-            const res = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ar`);
+        function toggleSearch() {
+            const s = document.getElementById('searchBox');
+            s.style.display = (s.style.display === 'block') ? 'none' : 'block';
+        }
+
+        async function fetchApi(endpoint, genre = '') {
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=ar`;
+            if(genre) url += `&with_genres=${genre}`;
+            const res = await fetch(url);
             const data = await res.json();
             renderMovies(data.results);
-            renderSlider(data.results.slice(0, 5));
+            if(endpoint === 'movie/popular') renderSlider(data.results.slice(0, 5));
         }
 
         function renderSlider(movies) {
@@ -148,56 +142,30 @@
         function renderMovies(movies) {
             const grid = document.getElementById('moviesGrid');
             grid.innerHTML = movies.filter(m => m.poster_path).map(m => `
-                <div class="movie-card" onclick="openDetails(${m.id}, 'movie')">
-                    <div class="movie-badge">WEB-DL</div>
+                <div class="movie-card" onclick="goToMovieDetails(${m.id}, '${m.title ? 'movie' : 'tv'}')">
+                    <div class="movie-badge">4K</div>
                     <img src="https://image.tmdb.org/t/p/w500${m.poster_path}">
                     <div class="movie-info">
-                        ${m.title}
-                        <div style="color:var(--primary); font-size:11px; margin-top:5px;">مشاهدة الآن <i class="fa-solid fa-circle-play"></i></div>
+                        ${m.title || m.name}
+                        <span class="watch-text">مشاهدة <i class="fa-solid fa-play-circle"></i></span>
                     </div>
                 </div>
             `).join('');
         }
 
-        async function openDetails(id, type) {
-            currentMovie = { id, type };
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('movieDetailsPage').style.display = 'block';
-            document.getElementById('playerContainer').style.display = 'none'; // تأكد من إخفاء المشغل عند الدخول
-            window.scrollTo(0,0);
-
-            const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=ar`);
-            const m = await res.json();
-            
-            document.getElementById('dTitle').innerText = m.title || m.name;
-            document.getElementById('dStory').innerText = m.overview || "لا يوجد وصف متاح لهذا العمل.";
-            document.getElementById('dPoster').src = 'https://image.tmdb.org/t/p/w500' + m.poster_path;
-            document.getElementById('dMeta').innerText = `التقييم: ⭐ ${m.vote_average.toFixed(1)} | السنة: ${m.release_date.split('-')[0]}`;
-
-            // جلب الممثلين
-            const cRes = await fetch(`${BASE_URL}/${type}/${id}/credits?api_key=${API_KEY}`);
-            const cData = await cRes.json();
-            document.getElementById('dCast').innerHTML = cData.cast.slice(0, 10).map(c => `
-                <div class="cast-item">
-                    <img src="${c.profile_path ? 'https://image.tmdb.org/t/p/w200'+c.profile_path : 'https://via.placeholder.com/70'}">
-                    <div style="font-size:10px; margin-top:5px;">${c.name}</div>
-                </div>
-            `).join('');
+        // الوظيفة الأساسية: التحويل لصفحة الموفي
+        function goToMovieDetails(id, type) {
+            window.location.href = `movie.html?id=${id}&type=${type}`;
         }
 
-        function showPlayer() {
-            const p = document.getElementById('playerContainer');
-            p.style.display = 'block';
-            p.innerHTML = `<iframe src="https://vidsrc.me/embed/${currentMovie.type}?tmdb=${currentMovie.id}" allowfullscreen></iframe>`;
-            p.scrollIntoView({ behavior: 'smooth' });
+        async function searchApi(query) {
+            if(query.length < 2) return;
+            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=ar`);
+            const data = await res.json();
+            renderMovies(data.results);
         }
 
-        function goHome() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('movieDetailsPage').style.display = 'none';
-        }
-
-        fetchInitial();
+        fetchApi('movie/popular');
     </script>
 </body>
 </html>
