@@ -158,6 +158,25 @@
         .cast-item img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
         .cast-item p { font-size: 12px; margin-top: 8px; color: #bbb; }
 
+        /* --- تنسيقات المسلسلات الجديدة --- */
+        #seriesSection { display: none; margin-top: 20px; }
+        .season-tabs { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .season-btn { 
+            padding: 10px 20px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; cursor: pointer; white-space: nowrap; 
+            transition: 0.3s;
+        }
+        .season-btn.active { background: var(--primary); border-color: var(--primary); }
+        
+        .episodes-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); 
+            gap: 10px; margin-top: 15px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 10px;
+        }
+        .episode-card { 
+            background: #1a1a1a; padding: 15px 5px; text-align: center; border-radius: 8px; border: 1px solid #333; 
+            cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 14px;
+        }
+        .episode-card:hover { background: var(--primary); transform: scale(1.1); }
+
         .related-section { position: relative; z-index: 2; width: 100%; max-width: 1400px; padding-bottom: 50px; }
         .related-grid {
             display: grid;
@@ -195,14 +214,20 @@
             <div class="content-panel">
                 <h1 id="movieTitleEN">Movie Title</h1>
                 
-                <div class="section-header"><i class="fa-solid fa-align-right"></i> قصة الفيلم</div>
+                <div class="section-header"><i class="fa-solid fa-align-right"></i> قصة العمل</div>
                 <p id="movieOverviewAR" class="overview">...</p>
+
+                <div id="seriesSection">
+                    <div class="section-header"><i class="fa-solid fa-layer-group"></i> المواسم والحلقات</div>
+                    <div class="season-tabs" id="seasonTabs"></div>
+                    <div class="episodes-grid" id="episodesGrid"></div>
+                </div>
 
                 <div class="section-header"><i class="fa-solid fa-list-check"></i> معلومات العمل</div>
                 <div class="details-grid">
-                    <div class="detail-card"><b><i class="fa-solid fa-film"></i> القسم:</b><span id="detCategory">أفلام</span></div>
+                    <div class="detail-card"><b><i class="fa-solid fa-film"></i> القسم:</b><span id="detCategory">---</span></div>
                     <div class="detail-card"><b><i class="fa-solid fa-tags"></i> النوع:</b><span id="detGenre">---</span></div>
-                    <div class="detail-card"><b><i class="fa-solid fa-clock"></i> المدة:</b><span id="detRuntime">-- دقيقة</span></div>
+                    <div class="detail-card"><b><i class="fa-solid fa-clock"></i> المدة/الحلقات:</b><span id="detRuntime">--</span></div>
                     <div class="detail-card"><b><i class="fa-solid fa-calendar"></i> السنة:</b><span id="detYear">----</span></div>
                     <div class="detail-card"><b><i class="fa-solid fa-star" style="color:var(--imdb-gold)"></i> التقييم:</b><span id="imdbRate">-- / 10</span></div>
                     <div class="detail-card"><b><i class="fa-solid fa-globe"></i> اللغة:</b><span id="detLang">--</span></div>
@@ -214,7 +239,7 @@
         </div>
 
         <div class="related-section">
-            <div class="section-header"><i class="fa-solid fa-layer-group"></i> أفلام قد تعجبك</div>
+            <div class="section-header"><i class="fa-solid fa-layer-group"></i> أعمال قد تعجبك</div>
             <div class="related-grid" id="relatedGrid"></div>
         </div>
     </div>
@@ -248,11 +273,21 @@
             document.getElementById('poster').src = 'https://image.tmdb.org/t/p/w500' + dataEN.poster_path;
             document.getElementById('heroSection').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${dataEN.backdrop_path})`;
             document.getElementById('detGenre').innerText = dataAR.genres.slice(0, 2).map(g => g.name).join(' / ');
-            document.getElementById('detRuntime').innerText = (dataEN.runtime || dataEN.episode_run_time?.[0] || '--') + ' دقيقة';
             document.getElementById('detYear').innerText = (dataEN.release_date || dataEN.first_air_date || '').split('-')[0];
             document.getElementById('imdbRate').innerText = dataEN.vote_average.toFixed(1) + ' / 10';
             document.getElementById('detLang').innerText = dataEN.original_language.toUpperCase();
+            
+            // تخصيص القسم (فيلم أم مسلسل)
+            if(type === 'tv') {
+                document.getElementById('detCategory').innerText = 'مسلسلات';
+                document.getElementById('detRuntime').innerText = dataEN.number_of_episodes + ' حلقة';
+                loadSeriesDetails(dataEN.seasons);
+            } else {
+                document.getElementById('detCategory').innerText = 'أفلام';
+                document.getElementById('detRuntime').innerText = (dataEN.runtime || '--') + ' دقيقة';
+            }
 
+            // الممثلين
             const castCont = document.getElementById('castContainer');
             dataEN.credits.cast.slice(0, 10).forEach(c => {
                 if(c.profile_path) {
@@ -260,16 +295,18 @@
                 }
             });
 
+            // أعمال مشابهة
             const relatedGrid = document.getElementById('relatedGrid');
             dataRelated.results.slice(0, 6).forEach(item => {
                 if(item.poster_path) {
                     relatedGrid.innerHTML += `
-                        <a href="movie.html?id=${item.id}&type=${type}" class="related-card">
+                        <a href="?id=${item.id}&type=${type}" class="related-card">
                             <img src="https://image.tmdb.org/t/p/w300${item.poster_path}">
                         </a>`;
                 }
             });
 
+            // التريلر
             const trailer = dataEN.videos.results.find(v => v.type === 'Trailer');
             if(trailer) {
                 document.getElementById('openTrailer').onclick = () => {
@@ -281,10 +318,46 @@
             }
         }
 
+        // وظيفة جلب المواسم والحلقات
+        function loadSeriesDetails(seasons) {
+            const seriesSection = document.getElementById('seriesSection');
+            const seasonTabs = document.getElementById('seasonTabs');
+            seriesSection.style.display = 'block';
+
+            // تصفية المواسم (تجنب موسم 0 إلا لو موجود فعلياً)
+            const validSeasons = seasons.filter(s => s.season_number > 0);
+
+            validSeasons.forEach((season, index) => {
+                const btn = document.createElement('button');
+                btn.className = `season-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = `الموسم ${season.season_number}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    showEpisodes(season.season_number, season.episode_count);
+                };
+                seasonTabs.appendChild(btn);
+            });
+
+            // عرض حلقات أول موسم تلقائياً
+            if(validSeasons.length > 0) {
+                showEpisodes(validSeasons[0].season_number, validSeasons[0].episode_count);
+            }
+        }
+
+        function showEpisodes(seasonNum, count) {
+            const grid = document.getElementById('episodesGrid');
+            grid.innerHTML = ''; // تنظيف الحلقات القديمة
+            for(let i=1; i<=count; i++) {
+                grid.innerHTML += `<div class="episode-card" title="الحلقة ${i}">E${i}</div>`;
+            }
+        }
+
         document.getElementById('closeTrailer').onclick = () => {
             document.getElementById('trailerModal').style.display = 'none';
             document.getElementById('trailerFrame').src = '';
         };
+
         loadData();
     </script>
 </body>
