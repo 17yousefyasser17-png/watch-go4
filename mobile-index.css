@@ -1,0 +1,52 @@
+/* --- Mobile Optimized CSS for Index --- */
+:root { 
+    --primary: #9b51e0; 
+    --bg-dark: #050505; 
+    --card-bg: rgba(20, 20, 20, 0.95);
+}
+
+body { 
+    background: var(--bg-dark); 
+    padding-bottom: 20px; /* مساحة للنهاية */
+}
+
+/* هيدر الموبايل: مدمج وشيك */
+.header { 
+    padding: 0 15px; 
+    height: 60px; 
+    justify-content: space-between;
+}
+.logo-ctn img { width: 35px; height: 35px; }
+.logo-ctn span { font-size: 18px; }
+
+/* إخفاء الناف بار الطويل واستبداله بتنسيق عمودي أو إخفاء */
+.main-nav { display: none; } /* يفضل عمل قائمة جانبية لاحقاً */
+
+/* السلايدر في الموبايل */
+#heroSection { height: 300px; }
+.slide-overlay { padding: 0 20px; align-items: center; text-align: center; }
+.slide-title { font-size: 22px; margin-bottom: 15px; }
+.hero-btn { padding: 10px 25px; font-size: 14px; }
+
+/* الحاوية الرئيسية: عمود واحد */
+.container { 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+}
+
+/* إخفاء السايد بار في الموبايل لتوفير مساحة */
+.sidebar { display: none; }
+
+/* شبكة الأفلام: كارتين في كل صف */
+.grid-display { 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px; 
+}
+
+.item-card img { height: 200px; }
+.item-name { font-size: 11px; }
+
+/* البحث في الموبايل */
+#searchBox input { width: 90%; font-size: 14px; }
