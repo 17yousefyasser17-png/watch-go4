@@ -17,7 +17,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* --- الهيدر --- */
+        /* --- الهيدر (شغال ديسكتوب وموبايل) --- */
         .header { 
             background: #0a0a0a; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -36,50 +36,44 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.8); z-index: 4000;
         }
         .nav-item:hover .dropdown { display: flex; }
+        .dropdown a { color: #eee; padding: 12px 20px; text-decoration: none; font-size: 13px; border-bottom: 1px solid #222; text-align: right; }
 
-        /* --- السلايدر --- */
-        #heroSection { width: 100%; height: 450px; position: relative; overflow: hidden; z-index: 10; }
-        .slide { width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; display: flex; align-items: center; }
+        /* --- السلايدر (تصليح المسافات) --- */
+        #heroSection { width: 100%; height: 450px; position: relative; overflow: hidden; }
+        .slide { width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; }
         .slide-overlay { 
             position: absolute; inset: 0; 
-            background: linear-gradient(to top, var(--bg-dark) 10%, transparent 100%); 
+            background: linear-gradient(to top, var(--bg-dark) 5%, transparent 100%); 
             display: flex; flex-direction: column; justify-content: center; padding: 0 80px;
-            z-index: 20;
         }
-        .slide-title { font-size: 35px; font-weight: 900; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
-        .hero-btn { 
-            background: var(--primary); color: white; text-decoration: none; 
-            padding: 12px 35px; border-radius: 50px; font-weight: bold; 
-            display: flex; align-items: center; gap: 10px; width: fit-content;
-            position: relative; z-index: 30;
-        }
+        .slide-title { font-size: 35px; font-weight: 900; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); }
+        .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 10px; width: fit-content; z-index: 50; }
 
-        /* --- شبكة المحتوى (إصلاح الظهور) --- */
-        .container { padding: 30px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; position: relative; z-index: 50; }
-        .section-box { margin-bottom: 40px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); width: 100%; }
+        /* --- منطقة المحتوى (تصليح ظهور الأفلام) --- */
+        .container { padding: 30px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; min-height: 500px; }
+        .sidebar { background: rgba(10, 10, 10, 0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; position: sticky; top: 90px; }
+        
+        .content { width: 100%; }
+        .section-box { background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); }
         .section-title { color: var(--primary); font-size: 18px; font-weight: bold; margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 12px; }
         
         .grid-display { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
-            gap: 20px; 
-            width: 100%;
+            gap: 20px;
         }
 
         .item-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
         .item-card:hover { transform: translateY(-8px); border-color: var(--primary); }
-        .item-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+        .item-card img { width: 100%; height: 260px; object-fit: cover; }
         .item-info { padding: 12px; text-align: center; }
-        .item-name { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #fff; }
+        .item-name { font-size: 13px; font-weight: bold; color: #fff; }
 
-        .sidebar { background: rgba(10, 10, 10, 0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; position: sticky; top: 90px; }
-
-        /* --- ميديا كويري: الموبايل (إصلاح المساحات والضغط) --- */
+        /* --- واجهة الموبايل (التعديل المطلوب) --- */
         @media (max-width: 768px) {
-            .header { padding: 0 15px; height: 60px; }
+            .header { padding: 0 15px; height: 65px; border-bottom: none; }
             .main-nav { display: none; }
-            
-            .container { grid-template-columns: 1fr; padding: 15px; gap: 15px; }
+            .container { grid-template-columns: 1fr; padding: 15px; }
             .sidebar { display: none; }
 
             #heroSection { height: 420px !important; }
@@ -87,34 +81,34 @@
                 padding: 15px !important; 
                 justify-content: flex-end !important; 
                 padding-bottom: 30px !important;
-                background: linear-gradient(to top, rgba(5,5,5,1) 25%, transparent 100%) !important;
+                background: linear-gradient(to top, #050505 45%, transparent 100%) !important;
+                text-align: center;
             }
-            .slide-title { font-size: 20px !important; text-align: center; width: 100%; }
+            .slide-title { font-size: 20px !important; margin-bottom: 15px !important; }
 
-            .news-tag-m {
+            .news-m-badge {
                 display: block !important;
-                background: var(--red-accent);
-                color: white; padding: 5px 12px; border-radius: 20px;
-                font-size: 12px; position: absolute; top: 75px; right: 15px; font-weight: bold;
+                background: var(--red-accent); color: white;
+                padding: 5px 15px; border-radius: 20px;
+                font-size: 12px; position: absolute; top: 80px; right: 15px; font-weight: bold;
                 z-index: 100;
             }
 
-            .mobile-btn-group {
+            .mobile-action-btns {
                 display: flex !important;
-                gap: 10px; width: 100%; margin-top: 15px;
+                gap: 10px; width: 100%; margin-top: 10px;
                 position: relative; z-index: 100;
             }
             .m-btn {
-                flex: 1; padding: 12px 5px; border-radius: 8px;
+                flex: 1; padding: 12px; border-radius: 8px;
                 font-weight: bold; text-decoration: none; font-size: 14px;
-                display: flex; align-items: center; justify-content: center; gap: 5px;
-                pointer-events: auto !important; /* لضمان قابلية الضغط */
+                display: flex; align-items: center; justify-content: center; gap: 8px;
             }
             .m-btn-red { background: var(--red-accent); color: white; }
-            .m-btn-yellow { background: var(--yellow-accent); color: black; }
+            .m-btn-yellow { background: var(--yellow-accent); color: #000; }
 
             .hero-btn { display: none !important; }
-            .grid-display { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* عرض فيلمين جنب بعض في الموبايل */
+            .grid-display { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .item-card img { height: 220px; }
         }
     </style>
@@ -132,8 +126,8 @@
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" style="color:white; padding:10px; text-decoration:none;">أفلام أجنبية</a>
-                    <a href="#" style="color:white; padding:10px; text-decoration:none;">أفلام نتفليكس</a>
+                    <a href="#">أفلام أجنبية</a>
+                    <a href="#">أفلام نتفليكس</a>
                 </div>
             </li>
             <li class="nav-item"><a class="nav-link" href="#">المسلسلات</a></li>
@@ -141,7 +135,7 @@
     </header>
 
     <section id="heroSection">
-        <div class="news-tag-m" style="display: none;">آخر الأخبار</div>
+        <div class="news-m-badge" style="display: none;">آخر الأخبار</div>
 
         <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original/m9YpS2rE1v24BvQun7zR73L03p9.jpg');">
             <div class="slide-overlay">
@@ -149,7 +143,7 @@
                 
                 <a href="#" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
 
-                <div class="mobile-btn-group" style="display: none;">
+                <div class="mobile-action-btns" style="display: none;">
                     <a href="#" class="m-btn m-btn-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
                     <a href="#" class="m-btn m-btn-yellow">العضوية المميزة</a>
                 </div>
@@ -159,10 +153,10 @@
 
     <div class="container">
         <aside class="sidebar">
-            <h3 class="section-title">أفلام مختارة</h3>
-            <div class="side-item" style="display:flex; gap:10px; margin-bottom:10px;">
-                <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg" style="width:50px; border-radius:5px;">
-                <span style="font-size:12px;">The Wrecking Crew</span>
+            <h3 class="section-title" style="font-size: 14px;">أفلام مختارة</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg" style="width: 50px; border-radius: 5px;">
+                <span style="font-size: 12px;">اسم الفيلم</span>
             </div>
         </aside>
 
@@ -176,18 +170,12 @@
                             <div class="item-name">The Wrecking Crew 2026</div>
                         </div>
                     </div>
-                    <div class="item-card">
-                        <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg">
-                        <div class="item-info">
-                            <div class="item-name">The Wrecking Crew 2026</div>
-                        </div>
                     </div>
-                </div>
             </div>
         </main>
 
         <aside class="sidebar">
-            <h3 class="section-title">الأكثر مشاهدة</h3>
+            <h3 class="section-title" style="font-size: 14px;">الأكثر مشاهدة</h3>
         </aside>
     </div>
 
