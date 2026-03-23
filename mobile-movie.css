@@ -1,0 +1,43 @@
+/* --- Mobile Optimized CSS for Movie Page --- */
+.hero-section { padding: 20px 10px; background-attachment: scroll; }
+
+.movie-layout { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 25px; 
+}
+
+/* البوستر في النص */
+.side-panel { width: 100%; align-items: center; }
+.poster { max-width: 220px; margin-bottom: 10px; }
+
+.btn { width: 90%; max-width: 300px; padding: 12px; font-size: 14px; }
+
+/* المحتوى */
+.content-panel { width: 100%; }
+.content-panel h1 { font-size: 26px; text-align: center; line-height: 1.3; }
+
+.overview { 
+    font-size: 15px; 
+    padding: 15px; 
+    border-right: 3px solid var(--primary); 
+}
+
+/* شبكة المواسم والحلقات */
+#seasonsGrid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+#episodesGrid { grid-template-columns: 1fr; gap: 15px; }
+
+/* معلومات العمل: اتنين في كل صف */
+.details-grid { 
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+}
+.detail-card { padding: 10px; font-size: 12px; flex-direction: column; gap: 5px; }
+
+/* طاقم التمثيل: تصغير الصور */
+.cast-item img { width: 65px; height: 65px; }
+.cast-item p { font-size: 11px; }
+
+/* الأعمال المشابهة */
+#relatedGrid { grid-template-columns: repeat(2, 1fr); }
