@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WatchGo - Pro Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="mobile-index.css" media="screen and (max-width: 1024px)">
+
     <style>
         :root { 
             --primary: #9b51e0; 
@@ -159,7 +162,6 @@
             if(s.style.display === "block") document.getElementById("searchInput").focus();
         }
 
-        // --- تشغيل دالة البحث ---
         async function searchApi(query) {
             if (query.length < 2) {
                 document.getElementById('homeView').classList.remove('hidden');
@@ -198,7 +200,6 @@
             const epData = await ep.json();
             document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 12).map(m => createCard(m, 'tv')).join('');
 
-            // البارات الجانبية
             const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`);
             const bestMData = await bestM.json();
             document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 8).map(m => `
