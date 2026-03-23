@@ -11,6 +11,8 @@
             --bg-dark: #050505; 
             --card-bg: rgba(20, 20, 20, 0.95);
             --transition: 0.3s ease;
+            --red-accent: #ff4b5c;
+            --yellow-accent: #ffcc00;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,7 +24,7 @@
             filter: blur(100px); z-index: -1;
         }
 
-        /* --- الهيدر (إصلاح مكان المسلسلات الكاملة) --- */
+        /* --- الهيدر (الأصلي مع إضافات الموبايل) --- */
         .header { 
             background: #0a0a0a; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -51,6 +53,9 @@
         .dropdown a { color: #eee; padding: 12px 20px; text-decoration: none; font-size: 13px; border-bottom: 1px solid #222; text-align: right; }
         .dropdown a:hover { background: #1a1a1a; color: var(--primary); }
 
+        /* أيقونات الموبايل المخفية في الديسكتوب */
+        .mobile-only { display: none; }
+
         /* --- السلايدر --- */
         #heroSection { width: 100%; height: 450px; position: relative; overflow: hidden; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -66,7 +71,7 @@
         .section-title { color: var(--primary); font-size: 18px; font-weight: bold; margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 12px; }
         .grid-display { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
-        .item-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
+        .item-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; cursor: pointer; position: relative; }
         .item-card:hover { transform: translateY(-8px); border-color: var(--primary); }
         .item-card img { width: 100%; height: 230px; object-fit: cover; }
         .item-info { padding: 10px; text-align: center; }
@@ -77,18 +82,66 @@
         .sidebar { background: rgba(10, 10, 10, 0.7); padding: 15px; border-radius: 12px; border: 1px solid rgba(155, 81, 224, 0.1); height: fit-content; position: sticky; top: 90px; }
         .side-title { color: var(--primary); font-size: 14px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; text-align: center; }
         .side-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; font-size: 11px; }
-        .side-item img { width: 45px; height: 65px; border-radius: 5px; object-fit: cover; }
+        .side-item img { width: 45px; height: 65px; border-radius: 50px; object-fit: cover; }
 
-        .hidden { display: none !important; }
-        #searchBox { display: none; padding: 20px; background: #000; text-align: center; border-bottom: 1px solid var(--primary); }
-        #searchBox input { width: 60%; padding: 12px; border-radius: 25px; border: 1px solid var(--primary); background: #111; color: #fff; outline: none; }
+        /* --- ميديا كويري: تعديلات واجهة الموبايل فقط --- */
+        @media (max-width: 768px) {
+            .header { padding: 0 15px; border-bottom: none; height: 65px; background: #000; }
+            .main-nav { display: none; } /* إخفاء منيو الديسكتوب */
+            .mobile-only { display: flex !important; align-items: center; gap: 15px; font-size: 20px; }
+            
+            .container { grid-template-columns: 1fr; padding: 15px; }
+            .sidebar { display: none; } /* إخفاء الجوانب في الموبايل */
 
-        @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
+            #heroSection { height: 500px !important; }
+            .slide-overlay { padding: 20px; align-items: center; text-align: center; }
+            .slide-title { font-size: 28px; }
+
+            /* زرار آخر الأخبار اللي في الصورة */
+            .news-badge {
+                display: block !important;
+                background: var(--red-accent);
+                padding: 6px 18px;
+                border-radius: 25px;
+                font-size: 13px;
+                font-weight: bold;
+                margin-bottom: 150px; /* لرفعه للأعلى مثل الصورة */
+            }
+
+            /* الأزرار الملونة الجديدة */
+            .mobile-action-btns {
+                display: flex !important;
+                gap: 10px;
+                width: 100%;
+                margin-top: 15px;
+            }
+            .m-btn {
+                flex: 1;
+                padding: 12px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            .m-btn-red { background: var(--red-accent); color: white; }
+            .m-btn-yellow { background: var(--yellow-accent); color: black; }
+            
+            /* إخفاء زرار الهيرو الأصلي في الموبايل */
+            .hero-btn { display: none; }
+        }
     </style>
 </head>
 <body>
 
     <header class="header">
+        <div class="mobile-only">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
         <a href="index.html" class="logo-ctn">
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
             <span style="font-weight: bold; font-size: 22px;">WATCHGO</span>
@@ -99,147 +152,71 @@
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', '')">أفلام أجنبية</a>
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a>
+                    <a href="#">أفلام أجنبية</a>
+                    <a href="#">أفلام نتفليكس</a>
                 </div>
             </li>
             <li class="nav-item">
                 <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/tv', 'أحدث المسلسلات', '')">مسلسلات حديثة</a>
-                    <a href="#" onclick="showCategory('discover/tv', 'دراما كورية', 'ko')">الدراما الكورية</a>
+                    <a href="#">مسلسلات حديثة</a>
+                    <a href="#">الدراما الكورية</a>
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="showCategory('discover/movie', 'عالم الأنمي', '16')">الأنمي</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">مسلسلات كاملة</a></li>
         </ul>
 
-        <div class="header-icons"><i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer; font-size: 20px;"></i></div>
+        <div class="mobile-only">
+            <i class="fa-solid fa-bars"></i>
+        </div>
     </header>
 
-    <div id="searchBox">
-        <input type="text" id="searchInput" placeholder="اكتب اسم الفيلم أو المسلسل هنا..." onkeyup="searchApi(this.value)">
-    </div>
-    
-    <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
+    <section id="heroSection">
+        <div class="slider-wrapper">
+            <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original/m9YpS2rE1v24BvQun7zR73L03p9.jpg');">
+                <div class="slide-overlay">
+                    <div class="news-badge" style="display: none;">آخر الأخبار</div>
+                    
+                    <h1 class="slide-title">The Wrecking Crew</h1>
+                    
+                    <a href="#" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
+
+                    <div class="mobile-action-btns" style="display: none;">
+                        <a href="#" class="m-btn m-btn-red"><i class="fa-solid fa-compass"></i> تصفح وإكتشف</a>
+                        <a href="#" class="m-btn m-btn-yellow">العضوية المميزة</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <div class="container">
-        <aside class="sidebar"><div class="side-title">أفضل أفلام الشهر</div><div id="bestMoviesSide"></div></aside>
-
-        <main class="main-col">
-            <div id="homeView">
-                <section class="section-box">
-                    <div class="section-title"><i class="fa-solid fa-fire"></i> أحدث الإضافات</div>
-                    <div class="grid-display" id="episodesGrid"></div>
-                </section>
-                <section class="section-box">
-                    <div class="section-title"><i class="fa-solid fa-star"></i> أفلام مقترحة</div>
-                    <div class="grid-display" id="moviesGrid"></div>
-                </section>
+        <aside class="sidebar">
+            <h3 class="side-title">أفلام مختارة</h3>
+            <div class="side-item">
+                <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg">
+                <span>اسم الفيلم المقترح</span>
             </div>
+        </aside>
 
-            <div id="fullView" class="hidden">
-                <div class="section-box">
-                    <div class="section-title" id="fullTitle">نتائج البحث</div>
-                    <div class="grid-display" id="fullGrid"></div>
-                </div>
+        <main class="content">
+            <div class="section-box">
+                <h2 class="section-title">آخر الحلقات المضافة</h2>
+                <div class="grid-display">
+                    <div class="item-card">
+                        <img src="https://image.tmdb.org/t/p/w500/8O76vV89pLgGkLpntZ341MndE4G.jpg">
+                        <div class="item-info">
+                            <div class="item-name">The Wrecking Crew 2026</div>
+                            <span class="watch-btn">مشاهدة</span>
+                        </div>
+                    </div>
+                    </div>
             </div>
         </main>
 
-        <aside class="sidebar"><div class="side-title">أحدث الأنميات</div><div id="animeSide"></div></aside>
+        <aside class="sidebar">
+            <h3 class="side-title">الأكثر مشاهدة</h3>
+            </aside>
     </div>
 
-    <script>
-        const API_KEY = 'b838a848a571a893e6b0effe4bd53db8';
-        const BASE_URL = 'https://api.themoviedb.org/3';
-
-        function toggleSearch() { 
-            const s = document.getElementById("searchBox");
-            s.style.display = (s.style.display === "block") ? "none" : "block";
-            if(s.style.display === "block") document.getElementById("searchInput").focus();
-        }
-
-        // --- تشغيل دالة البحث ---
-        async function searchApi(query) {
-            if (query.length < 2) {
-                document.getElementById('homeView').classList.remove('hidden');
-                document.getElementById('fullView').classList.add('hidden');
-                return;
-            }
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('fullView').classList.remove('hidden');
-            document.getElementById('fullTitle').innerText = `نتائج البحث عن: ${query}`;
-            
-            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=ar`);
-            const data = await res.json();
-            document.getElementById('fullGrid').innerHTML = data.results
-                .filter(m => m.poster_path)
-                .map(m => createCard(m, m.media_type || 'movie')).join('');
-        }
-
-        function createCard(m, type) {
-            return `
-                <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${type}'">
-                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}">
-                    <div class="item-info">
-                        <div class="item-name">${m.title || m.name}</div>
-                        <div class="watch-btn">شاهد الآن</div>
-                    </div>
-                </div>`;
-        }
-
-        async function init() {
-            const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
-            const popData = await pop.json();
-            renderSlider(popData.results.slice(0, 5));
-            document.getElementById('moviesGrid').innerHTML = popData.results.slice(0, 12).map(m => createCard(m, 'movie')).join('');
-
-            const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}`);
-            const epData = await ep.json();
-            document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 12).map(m => createCard(m, 'tv')).join('');
-
-            // البارات الجانبية
-            const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`);
-            const bestMData = await bestM.json();
-            document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 8).map(m => `
-                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
-                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div>${m.title}</div>
-                </div>`).join('');
-
-            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16`);
-            const aniData = await ani.json();
-            document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
-                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
-                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div>${m.title}</div>
-                </div>`).join('');
-        }
-
-        function renderSlider(movies) {
-            const wrapper = document.getElementById('sliderWrapper');
-            wrapper.innerHTML = movies.map(m => `
-                <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original${m.backdrop_path}')">
-                    <div class="slide-overlay">
-                        <h2 class="slide-title">${m.title}</h2>
-                        <a href="movie.html?id=${m.id}&type=movie" class="hero-btn"><i class="fa-solid fa-play"></i> شاهد الآن</a>
-                    </div>
-                </div>`).join('');
-            let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 6000);
-        }
-
-        async function showCategory(endpoint, title, genreId) {
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('fullView').classList.remove('hidden');
-            document.getElementById('fullTitle').innerText = title;
-            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}`;
-            if(genreId) url += `&with_genres=${genreId}`;
-            const res = await fetch(url);
-            const data = await res.json();
-            document.getElementById('fullGrid').innerHTML = data.results.map(m => createCard(m, endpoint.includes('tv') ? 'tv' : 'movie')).join('');
-        }
-
-        init();
-    </script>
 </body>
 </html>
