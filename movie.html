@@ -176,11 +176,12 @@
         async function fetchContent() {
             if(!id) return;
             try {
+                // طلب البيانات بالعربية والإنجليزية في نفس الوقت
                 const [resAR, resEN, resVid, resSim] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=ar-SA`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=credits`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${API_KEY}`),
-                    fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${API_KEY}&language=en-US`)
+                    fetch(`https://api.themoviedb.org/3/${type}/${id}/similar?api_key=${API_KEY}&language=ar-SA`)
                 ]);
 
                 const dataAR = await resAR.json();
@@ -188,8 +189,12 @@
                 const vids = await resVid.json();
                 const similar = await resSim.json();
 
-                document.getElementById('movieTitle').innerText = dataEN.title || dataEN.name;
-                document.getElementById('movieOverview').innerText = dataAR.overview || dataEN.overview || "الوصف غير متوفر.";
+                // تعريب القصة بذكاء: نأخذ العربية وإذا كانت فارغة نأخذ الإنجليزية
+                document.getElementById('movieOverview').innerText = (dataAR.overview && dataAR.overview.length > 5) ? dataAR.overview : (dataEN.overview || "الوصف غير متوفر حالياً.");
+                
+                // العنوان: يفضل الإنجليزي لأنه الأساسي في قاعدة البيانات العالمية ولكن يمكنك تغييره لـ dataAR.title إذا أردت
+                document.getElementById('movieTitle').innerText = dataEN.title || dataEN.name || dataAR.title || dataAR.name;
+                
                 document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${dataEN.poster_path}`;
                 document.getElementById('heroSection').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${dataEN.backdrop_path})`;
                 
@@ -241,11 +246,17 @@
             grid.innerHTML = '<p style="padding:20px; color:var(--primary);">Loading Episodes...</p>';
             area.style.display = 'block';
             area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=en-US`);
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=ar-SA`);
             const data = await res.json();
+            
+            // في حالة لم تكن بيانات الحلقة مترجمة للعربية
+            const resBackup = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=en-US`);
+            const dataBackup = await resBackup.json();
+
             grid.innerHTML = '';
-            data.episodes?.forEach(e => {
-                grid.innerHTML += `<div class="item-card blur-item"><div class="item-badge">Episode ${e.episode_number}</div><img src="https://image.tmdb.org/t/p/w300${e.still_path || ''}"><div class="item-info"><b>Episode ${e.episode_number}</b></div></div>`;
+            dataBackup.episodes?.forEach((e, index) => {
+                const epName = (data.episodes && data.episodes[index] && data.episodes[index].name) ? data.episodes[index].name : `الحلقة ${e.episode_number}`;
+                grid.innerHTML += `<div class="item-card blur-item"><div class="item-badge">Episode ${e.episode_number}</div><img src="https://image.tmdb.org/t/p/w300${e.still_path || ''}"><div class="item-info"><b>${epName}</b></div></div>`;
             });
         }
 
