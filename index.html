@@ -37,7 +37,7 @@
         .nav-link:hover { color: var(--primary); background: rgba(155, 81, 224, 0.05); }
 
         .dropdown { 
-            position: absolute; top: 75px; right: 0; background: #0a0a0a; min-width: 200px; 
+            position: absolute; top: 75px; right: 0; background: #0a0a0a; min-width: 220px; 
             border-top: 3px solid var(--primary); display: none; flex-direction: column; 
             box-shadow: 0 15px 30px rgba(0,0,0,0.9); z-index: 3000;
         }
@@ -60,7 +60,7 @@
         /* --- كارت المحتوى --- */
         .grid-display { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
         .item-card { background: var(--card-bg); border-radius: 8px; overflow: visible; border: 1px solid var(--border-color); transition: 0.4s ease; cursor: pointer; position: relative; z-index: 1; }
-        .item-card:hover { transform: scale(1.15); z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.9); border-color: var(--primary); }
+        .item-card:hover { transform: scale(1.1); z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.9); border-color: var(--primary); }
         .item-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 8px 8px 0 0; }
         
         .hover-details { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(15, 15, 15, 0.98); padding: 15px 12px; opacity: 0; visibility: hidden; transition: 0.3s; border-top: 1px solid var(--primary); border-radius: 0 0 8px 8px; max-height: 100%; overflow: hidden; }
@@ -74,7 +74,7 @@
         /* --- الترقيم --- */
         .pagination-container { display: flex; justify-content: center; gap: 8px; margin-top: 25px; margin-bottom: 10px; }
         .page-btn { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.3s; min-width: 35px; }
-        .page-btn:hover, .page-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+        .page-btn:hover, .page-btn.active { background: var(--primary); border-color: var(--primary); }
 
         /* الحاويات */
         .container { padding: 20px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; max-width: 1700px; margin: 0 auto; }
@@ -103,21 +103,28 @@
         </a>
         <nav class="main-nav">
             <div class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></div>
+            
             <div class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                 <div class="dropdown">
+                    <a href="#" onclick="showFull('discover/movie', 'أفلام مصرية', 'egypt')">أفلام مصرية</a>
+                    <a href="#" onclick="showFull('discover/movie', 'أفلام عربية', 'arabic_only')">أفلام عربية</a>
                     <a href="#" onclick="showFull('discover/movie', 'أفلام أجنبية', 'en')">أفلام أجنبية</a>
-                    <a href="#" onclick="showFull('discover/movie', 'أفلام عربية', 'ar')">أفلام عربية</a>
+                    <a href="#" onclick="showFull('discover/movie', 'أفلام رعب', '27')">أفلام رعب</a>
+                    <a href="#" onclick="showFull('discover/movie', 'أفلام أكشن', '28')">أفلام أكشن</a>
                 </div>
             </div>
+
             <div class="nav-item">
                 <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showFull('discover/tv', 'مسلسلات أجنبية', 'en-tv')">مسلسلات أجنبية</a>
-                    <a href="#" onclick="showFull('discover/tv', 'مسلسلات نتفليكس', 'netflix')" class="nav-netflix">مسلسلات Netflix</a>
                     <a href="#" onclick="showFull('discover/tv', 'مسلسلات رمضان 2026', 'ramadan')">مسلسلات رمضان 2026</a>
+                    <a href="#" onclick="showFull('discover/tv', 'مسلسلات Netflix', 'netflix')" class="nav-netflix">مسلسلات Netflix</a>
+                    <a href="#" onclick="showFull('discover/tv', 'مسلسلات مصرية', 'eg-tv')">مسلسلات مصرية</a>
+                    <a href="#" onclick="showFull('discover/tv', 'مسلسلات أجنبية', 'en-tv')">مسلسلات أجنبية</a>
                 </div>
             </div>
+
             <div class="nav-item"><a class="nav-link" href="#" onclick="showFull('discover/movie', 'عالم الأنمي', '16')">أنمي</a></div>
         </nav>
         <div class="header-icons">
@@ -126,7 +133,7 @@
     </header>
 
     <div id="searchBox">
-        <center><input type="text" id="searchInput" placeholder="ابحث..." onkeyup="searchApi(this.value)"></center>
+        <center><input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeyup="searchApi(this.value)"></center>
     </div>
     
     <div class="slider-container" id="sliderArea">
@@ -148,13 +155,19 @@
                 </section>
 
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #e74c3c;"></i> أحدث الأفلام العربية</span></div>
-                    <div class="grid-display" id="arabicMoviesGrid"></div>
+                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #e74c3c;"></i> أحدث الأفلام المصرية</span></div>
+                    <div class="grid-display" id="egyptGrid"></div>
+                    <div class="pagination-container" id="egyptPag"></div>
+                </section>
+
+                <section class="section-box">
+                    <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #3498db;"></i> أفلام عربية منوعة</span></div>
+                    <div class="grid-display" id="arabicGrid"></div>
                     <div class="pagination-container" id="arabicPag"></div>
                 </section>
 
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> أحدث الأفلام العالمية</span></div>
+                    <div class="section-title"><span><i class="fa-solid fa-globe" style="color: #2ecc71;"></i> أحدث الأفلام العالمية</span></div>
                     <div class="grid-display" id="moviesGrid"></div>
                     <div class="pagination-container" id="moviesPag"></div>
                 </section>
@@ -193,7 +206,7 @@
             const arData = await resAr.json();
 
             const displayName = isArabic ? (arData.title || arData.name || m.title || m.name) : (m.title || m.name);
-            const displayStory = arData.overview || "لا يوجد وصف عربي حالياً لهذه المادة.";
+            const displayStory = arData.overview || "لا يوجد وصف عربي حالياً.";
 
             return `
                 <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${type}'">
@@ -210,10 +223,13 @@
                 </div>`;
         }
 
-        async function loadSection(url, gridId, pagId, type, pageNum = 1) {
-            // إضافة خاصية الترتيب من الأحدث للأقدم
+        async function loadSection(url, gridId, pagId, type, cat = '', pageNum = 1) {
             const sortParam = type === 'movie' ? '&sort_by=primary_release_date.desc' : '&sort_by=first_air_date.desc';
-            const finalUrl = url.includes('&page=') ? url.split('&page=')[0] + `${sortParam}&page=${pageNum}` : url + `${sortParam}&page=${pageNum}`;
+            let finalUrl = `${url}${sortParam}&page=${pageNum}`;
+            
+            // تخصيص الفلترة للأقسام
+            if(cat === 'egypt') finalUrl += `&with_origin_country=EG&with_original_language=ar`;
+            else if(cat === 'arabic_only') finalUrl += `&with_original_language=ar&without_origin_country=EG`;
             
             const res = await fetch(finalUrl);
             const data = await res.json();
@@ -223,15 +239,16 @@
             
             let pagHtml = '';
             for(let i=1; i<=Math.min(data.total_pages, 5); i++) {
-                pagHtml += `<button class="page-btn ${i === pageNum ? 'active' : ''}" onclick="loadSection('${url}', '${gridId}', '${pagId}', '${type}', ${i})">${i}</button>`;
+                pagHtml += `<button class="page-btn ${i === pageNum ? 'active' : ''}" onclick="loadSection('${url}', '${gridId}', '${pagId}', '${type}', '${cat}', ${i})">${i}</button>`;
             }
             document.getElementById(pagId).innerHTML = pagHtml;
         }
 
         async function init() {
-            // تحميل أقسام الرئيسية مع الترتيب التنازلي (الأحدث أولاً)
+            // تحميل أقسام الرئيسية (مصرية، عربية، عالمية، رمضان)
             loadSection(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&language=ar-SA&first_air_date_year=2026`, 'ramadanGrid', 'ramadanPag', 'tv');
-            loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&language=ar-SA`, 'arabicMoviesGrid', 'arabicPag', 'movie');
+            loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}`, 'egyptGrid', 'egyptPag', 'movie', 'egypt');
+            loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}`, 'arabicGrid', 'arabicPag', 'movie', 'arabic_only');
             loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US`, 'moviesGrid', 'moviesPag', 'movie');
 
             // سايد بار وسلايدر
@@ -277,10 +294,13 @@
             const sortParam = endpoint.includes('tv') ? '&sort_by=first_air_date.desc' : '&sort_by=primary_release_date.desc';
             let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}${sortParam}&page=${page}`;
             
-            if(cat === 'ar') url += `&with_original_language=ar`;
+            if(cat === 'egypt') url += `&with_origin_country=EG&with_original_language=ar`;
+            else if(cat === 'arabic_only') url += `&with_original_language=ar&without_origin_country=EG`;
             else if(cat === 'netflix') url += `&with_networks=213`;
             else if(cat === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2026`;
             else if(cat === '16') url += `&with_genres=16`;
+            else if(cat === 'eg-tv') url += `&with_origin_country=EG&with_original_language=ar`;
+            else if(!isNaN(cat)) url += `&with_genres=${cat}`;
 
             const res = await fetch(url);
             const data = await res.json();
@@ -301,8 +321,7 @@
             document.getElementById('mainDisplay').classList.add('hidden');
             document.getElementById('sliderArea').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
-            document.getElementById('fullTitle').innerText = "نتائج البحث عن: " + query;
-            
+            document.getElementById('fullTitle').innerText = "نتائج البحث: " + query;
             const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`);
             const data = await res.json();
             const cards = await Promise.all(data.results.filter(m => m.poster_path).map(m => createCard(m, m.media_type || 'movie')));
