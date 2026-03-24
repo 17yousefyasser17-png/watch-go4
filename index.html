@@ -71,7 +71,7 @@
         .meta-info span { border: 1px solid #333; padding: 2px 6px; border-radius: 3px; background: #000; }
         .watch-btn { background: var(--primary); color: #fff; font-size: 12px; padding: 8px; border-radius: 4px; font-weight: bold; display: block; text-align: center; text-decoration: none; }
 
-        /* --- الترقيم (Pagination) --- */
+        /* --- الترقيم --- */
         .pagination-container { display: flex; justify-content: center; gap: 8px; margin-top: 25px; margin-bottom: 10px; }
         .page-btn { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.3s; min-width: 35px; }
         .page-btn:hover, .page-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
@@ -148,13 +148,13 @@
                 </section>
 
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #e74c3c;"></i> أفلام عربية ومصرية</span></div>
+                    <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #e74c3c;"></i> أحدث الأفلام العربية</span></div>
                     <div class="grid-display" id="arabicMoviesGrid"></div>
                     <div class="pagination-container" id="arabicPag"></div>
                 </section>
 
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> أفلام عالمية</span></div>
+                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> أحدث الأفلام العالمية</span></div>
                     <div class="grid-display" id="moviesGrid"></div>
                     <div class="pagination-container" id="moviesPag"></div>
                 </section>
@@ -184,17 +184,14 @@
             s.style.display = (s.style.display === "block") ? "none" : "block";
         }
 
-        // دالة إنشاء الكارت الذكية (الاسم بالعربي للعربي، وبالإنجليزي للأجنبي، والقصة دايما عربي)
         async function createCard(m, type) {
             const isArabic = m.original_language === 'ar';
-            const date = m.release_date || m.first_air_date || '2025';
+            const date = m.release_date || m.first_air_date || '2026';
             const year = date.split('-')[0];
             
-            // جلب البيانات العربية (للقصة دايماً)
             const resAr = await fetch(`${BASE_URL}/${type}/${m.id}?api_key=${API_KEY}&language=ar-SA`);
             const arData = await resAr.json();
 
-            // القرار: الاسم
             const displayName = isArabic ? (arData.title || arData.name || m.title || m.name) : (m.title || m.name);
             const displayStory = arData.overview || "لا يوجد وصف عربي حالياً لهذه المادة.";
 
@@ -214,14 +211,16 @@
         }
 
         async function loadSection(url, gridId, pagId, type, pageNum = 1) {
-            const finalUrl = url.includes('&page=') ? url.split('&page=')[0] + `&page=${pageNum}` : url + `&page=${pageNum}`;
+            // إضافة خاصية الترتيب من الأحدث للأقدم
+            const sortParam = type === 'movie' ? '&sort_by=primary_release_date.desc' : '&sort_by=first_air_date.desc';
+            const finalUrl = url.includes('&page=') ? url.split('&page=')[0] + `${sortParam}&page=${pageNum}` : url + `${sortParam}&page=${pageNum}`;
+            
             const res = await fetch(finalUrl);
             const data = await res.json();
             
             const cards = await Promise.all(data.results.slice(0, 12).map(m => createCard(m, type)));
             document.getElementById(gridId).innerHTML = cards.join('');
             
-            // إنشاء الترقيم للقسم
             let pagHtml = '';
             for(let i=1; i<=Math.min(data.total_pages, 5); i++) {
                 pagHtml += `<button class="page-btn ${i === pageNum ? 'active' : ''}" onclick="loadSection('${url}', '${gridId}', '${pagId}', '${type}', ${i})">${i}</button>`;
@@ -230,13 +229,13 @@
         }
 
         async function init() {
-            // تحميل أقسام الرئيسية
-            loadSection(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&language=ar-SA&first_air_date_year=2025`, 'ramadanGrid', 'ramadanPag', 'tv');
+            // تحميل أقسام الرئيسية مع الترتيب التنازلي (الأحدث أولاً)
+            loadSection(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&language=ar-SA&first_air_date_year=2026`, 'ramadanGrid', 'ramadanPag', 'tv');
             loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&language=ar-SA`, 'arabicMoviesGrid', 'arabicPag', 'movie');
-            loadSection(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`, 'moviesGrid', 'moviesPag', 'movie');
+            loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US`, 'moviesGrid', 'moviesPag', 'movie');
 
             // سايد بار وسلايدر
-            const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
+            const pop = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US`);
             const pData = await pop.json();
             renderSlider(pData.results.slice(0, 5));
 
@@ -248,7 +247,7 @@
                     <div class="txt">${m.title}</div>
                 </div>`).join('');
 
-            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US`);
+            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US&sort_by=primary_release_date.desc`);
             const aniData = await ani.json();
             document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
                 <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
@@ -275,10 +274,12 @@
             document.getElementById('fullView').classList.remove('hidden');
             document.getElementById('fullTitle').innerText = title;
 
-            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&page=${page}`;
+            const sortParam = endpoint.includes('tv') ? '&sort_by=first_air_date.desc' : '&sort_by=primary_release_date.desc';
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}${sortParam}&page=${page}`;
+            
             if(cat === 'ar') url += `&with_original_language=ar`;
             else if(cat === 'netflix') url += `&with_networks=213`;
-            else if(cat === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2025`;
+            else if(cat === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2026`;
             else if(cat === '16') url += `&with_genres=16`;
 
             const res = await fetch(url);
