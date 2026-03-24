@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WatchGo - Pro Cinema Hub</title>
+    <title>WatchGo - Smart Cinema Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -48,6 +48,20 @@
 
         .header-icons { display: flex; align-items: center; gap: 15px; }
         .icon-btn { color: #ccc; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .icon-btn:hover { color: var(--primary); }
+
+        /* --- شريط البحث المتطور --- */
+        #searchBox { 
+            background: rgba(0,0,0,0.95); padding: 20px; display: none; 
+            position: fixed; top: 75px; left: 0; width: 100%; z-index: 1500;
+            border-bottom: 1px solid var(--primary); backdrop-filter: blur(10px);
+        }
+        #searchBox input { 
+            width: 80%; max-width: 800px; padding: 15px 25px; background: #111; 
+            border: 2px solid var(--border-color); color: #fff; border-radius: 50px; 
+            outline: none; font-size: 18px; transition: 0.3s;
+        }
+        #searchBox input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(155, 81, 224, 0.3); }
 
         /* --- السلايدر --- */
         .slider-container { max-width: 1620px; margin: 20px auto; padding: 0 40px; }
@@ -74,7 +88,7 @@
         /* --- الترقيم --- */
         .pagination-container { display: flex; justify-content: center; gap: 8px; margin-top: 25px; margin-bottom: 10px; }
         .page-btn { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.3s; min-width: 35px; }
-        .page-btn:hover, .page-btn.active { background: var(--primary); border-color: var(--primary); }
+        .page-btn:hover, .page-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
 
         /* الحاويات */
         .container { padding: 20px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; max-width: 1700px; margin: 0 auto; }
@@ -83,12 +97,12 @@
         .sidebar { background: #111; border: 1px solid var(--border-color); border-radius: 8px; height: fit-content; position: sticky; top: 90px; }
         .side-title { background: #1a1a1a; color: var(--primary); font-size: 13px; font-weight: bold; padding: 12px; border-bottom: 1px solid var(--border-color); text-align: center; }
         .side-list { padding: 10px; }
-        .side-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
+        .side-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #1a1a1a; cursor: pointer; transition: 0.2s; }
+        .side-item:hover { background: #181818; }
         .side-item img { width: 45px; height: 65px; border-radius: 4px; object-fit: cover; }
         .side-item .txt { font-size: 11px; color: #ccc; }
 
-        #searchBox { background: #000; border-bottom: 1px solid var(--primary); padding: 15px; display: none; }
-        #searchBox input { width: 50%; padding: 10px 20px; background: #111; border: 1px solid var(--primary); color: #fff; border-radius: 30px; outline: none; }
+        .no-results { text-align: center; padding: 50px; font-size: 20px; color: #777; width: 100%; }
         .hidden { display: none !important; }
 
         @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } .main-nav { display: none; } }
@@ -133,7 +147,10 @@
     </header>
 
     <div id="searchBox">
-        <center><input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeyup="searchApi(this.value)"></center>
+        <center>
+            <input type="text" id="searchInput" placeholder="ابحث عن اسم الفيلم أو المسلسل (عربي أو English)..." onkeyup="smartSearch(this.value)">
+            <p style="margin-top:10px; font-size:12px; color:var(--primary);">اكتب حرفين على الأقل للبحث...</p>
+        </center>
     </div>
     
     <div class="slider-container" id="sliderArea">
@@ -194,7 +211,9 @@
 
         function toggleSearch() { 
             const s = document.getElementById("searchBox");
-            s.style.display = (s.style.display === "block") ? "none" : "block";
+            const isVisible = s.style.display === "block";
+            s.style.display = isVisible ? "none" : "block";
+            if(!isVisible) document.getElementById("searchInput").focus();
         }
 
         async function createCard(m, type) {
@@ -210,7 +229,7 @@
 
             return `
                 <div class="item-card" onclick="location.href='movie.html?id=${m.id}&type=${type}'">
-                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" loading="lazy">
+                    <img src="https://image.tmdb.org/t/p/w500${m.poster_path}" alt="${displayName}" onerror="this.src='https://via.placeholder.com/500x750?text=No+Image'">
                     <div class="hover-details">
                         <div class="item-name" style="direction: ${isArabic ? 'rtl' : 'ltr'}">${displayName}</div>
                         <p class="item-story">${displayStory}</p>
@@ -223,11 +242,56 @@
                 </div>`;
         }
 
+        // دالة البحث الذكي
+        let searchTimer;
+        function smartSearch(query) {
+            clearTimeout(searchTimer);
+            if (query.length < 2) return;
+            searchTimer = setTimeout(() => executeSmartSearch(query), 500);
+        }
+
+        async function executeSmartSearch(query) {
+            document.getElementById('mainDisplay').classList.add('hidden');
+            document.getElementById('sliderArea').classList.add('hidden');
+            document.getElementById('fullView').classList.remove('hidden');
+            document.getElementById('fullTitle').innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> نتائج البحث عن: ${query}`;
+            document.getElementById('fullGrid').innerHTML = '<div class="no-results">جاري البحث...</div>';
+
+            try {
+                // البحث في الأفلام والمسلسلات في نفس الوقت لزيادة الدقة
+                const [movieRes, tvRes] = await Promise.all([
+                    fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=ar-SA`),
+                    fetch(`${BASE_URL}/search/tv?api_key=${API_KEY}&query=${query}&language=ar-SA`)
+                ]);
+
+                const movieData = await movieRes.json();
+                const tvData = await tvRes.json();
+
+                // دمج النتائج وترتيبها حسب الشعبية والوجود الفعلي لصورة البوستر
+                let combinedResults = [
+                    ...movieData.results.map(i => ({...i, media_type: 'movie'})),
+                    ...tvData.results.map(i => ({...i, media_type: 'tv'}))
+                ].filter(item => item.poster_path) // استبعاد النتائج اللي ملهاش صورة
+                 .sort((a, b) => b.popularity - a.popularity);
+
+                if (combinedResults.length === 0) {
+                    document.getElementById('fullGrid').innerHTML = '<div class="no-results">عذراً، لم نجد نتائج تطابق بحثك. جرب كلمات أخرى.</div>';
+                    return;
+                }
+
+                const cards = await Promise.all(combinedResults.map(m => createCard(m, m.media_type)));
+                document.getElementById('fullGrid').innerHTML = cards.join('');
+                document.getElementById('fullPag').innerHTML = ''; // إخفاء الترقيم في البحث لسرعة العرض
+
+            } catch (err) {
+                document.getElementById('fullGrid').innerHTML = '<div class="no-results">حدث خطأ أثناء البحث، حاول مرة أخرى.</div>';
+            }
+        }
+
         async function loadSection(url, gridId, pagId, type, cat = '', pageNum = 1) {
             const sortParam = type === 'movie' ? '&sort_by=primary_release_date.desc' : '&sort_by=first_air_date.desc';
             let finalUrl = `${url}${sortParam}&page=${pageNum}`;
             
-            // تخصيص الفلترة للأقسام
             if(cat === 'egypt') finalUrl += `&with_origin_country=EG&with_original_language=ar`;
             else if(cat === 'arabic_only') finalUrl += `&with_original_language=ar&without_origin_country=EG`;
             
@@ -245,13 +309,11 @@
         }
 
         async function init() {
-            // تحميل أقسام الرئيسية (مصرية، عربية، عالمية، رمضان)
             loadSection(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&language=ar-SA&first_air_date_year=2026`, 'ramadanGrid', 'ramadanPag', 'tv');
             loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}`, 'egyptGrid', 'egyptPag', 'movie', 'egypt');
             loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}`, 'arabicGrid', 'arabicPag', 'movie', 'arabic_only');
             loadSection(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US`, 'moviesGrid', 'moviesPag', 'movie');
 
-            // سايد بار وسلايدر
             const pop = await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US`);
             const pData = await pop.json();
             renderSlider(pData.results.slice(0, 5));
@@ -261,7 +323,7 @@
             document.getElementById('bestMoviesSide').innerHTML = tData.results.slice(0, 8).map(m => `
                 <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
                     <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div class="txt">${m.title}</div>
+                    <div class="txt" style="margin-right:10px">${m.title}</div>
                 </div>`).join('');
 
             const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US&sort_by=primary_release_date.desc`);
@@ -269,7 +331,7 @@
             document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
                 <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
                     <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div class="txt">${m.title}</div>
+                    <div class="txt" style="margin-right:10px">${m.title}</div>
                 </div>`).join('');
         }
 
@@ -314,19 +376,6 @@
             }
             document.getElementById('fullPag').innerHTML = pagHtml;
             window.scrollTo(0, 0);
-        }
-
-        async function searchApi(query) {
-            if (query.length < 2) return;
-            document.getElementById('mainDisplay').classList.add('hidden');
-            document.getElementById('sliderArea').classList.add('hidden');
-            document.getElementById('fullView').classList.remove('hidden');
-            document.getElementById('fullTitle').innerText = "نتائج البحث: " + query;
-            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`);
-            const data = await res.json();
-            const cards = await Promise.all(data.results.filter(m => m.poster_path).map(m => createCard(m, m.media_type || 'movie')));
-            document.getElementById('fullGrid').innerHTML = cards.join('');
-            document.getElementById('fullPag').innerHTML = '';
         }
 
         init();
