@@ -16,9 +16,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
+        body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* --- الهيدر المطور --- */
+        /* --- الهيدر --- */
         .header { 
             background: #000; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -61,24 +61,16 @@
             display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; 
         }
         .slide-title { font-size: 32px; font-weight: 900; margin-bottom: 15px; text-shadow: 2px 2px 10px #000; direction: ltr; text-align: right; }
-
         .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; width: fit-content; }
 
-        /* --- كارت الفيلم (اسم إنجليزي + قصة عربي) --- */
+        /* --- كارت الفيلم --- */
         .grid-display { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        
         .item-card { 
             background: var(--card-bg); border-radius: 8px; overflow: visible; 
             border: 1px solid var(--border-color); transition: 0.4s ease; 
             cursor: pointer; position: relative; z-index: 1;
         }
-
-        .item-card:hover { 
-            transform: scale(1.15); z-index: 100; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-            border-color: var(--primary);
-        }
-
+        .item-card:hover { transform: scale(1.15); z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.9); border-color: var(--primary); }
         .item-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 8px 8px 0 0; }
         
         .hover-details {
@@ -88,31 +80,27 @@
             border-top: 1px solid var(--primary); border-radius: 0 0 8px 8px;
             max-height: 100%; overflow: hidden;
         }
-
         .item-card:hover .hover-details { opacity: 1; visibility: visible; }
-
         .item-name { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #fff; text-align: center; direction: ltr; }
-        
-        .item-story { 
-            font-size: 11px; color: #ccc; line-height: 1.5; margin-bottom: 10px; 
-            height: 50px; overflow: hidden; display: -webkit-box; 
-            -webkit-line-clamp: 3; -webkit-box-orient: vertical; text-align: center; 
-            direction: rtl;
-        }
-
+        .item-story { font-size: 11px; color: #ccc; line-height: 1.5; margin-bottom: 10px; height: 50px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; text-align: center; direction: rtl; }
         .meta-info { display: flex; justify-content: center; gap: 8px; font-size: 10px; color: #aaa; margin-bottom: 10px; }
         .meta-info span { border: 1px solid #333; padding: 2px 6px; border-radius: 3px; background: #000; }
+        .watch-btn { background: var(--primary); color: #fff; font-size: 12px; padding: 8px; border-radius: 4px; font-weight: bold; display: block; text-align: center; text-decoration: none; }
 
-        .watch-btn { 
-            background: var(--primary); color: #fff; font-size: 12px; padding: 8px; 
-            border-radius: 4px; font-weight: bold; display: block; text-align: center; text-decoration: none;
+        /* --- الترقيم (Pagination) --- */
+        .pagination { display: flex; justify-content: center; gap: 10px; margin: 40px 0; flex-wrap: wrap; }
+        .page-btn { 
+            background: #111; color: #fff; border: 1px solid var(--border-color); 
+            padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: 0.3s; 
+            font-weight: bold; min-width: 40px; text-align: center;
         }
+        .page-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .page-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
 
         /* الحاويات والسايد بار */
         .container { padding: 20px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; max-width: 1700px; margin: 0 auto; }
         .section-box { margin-bottom: 40px; }
         .section-title { background: #111; padding: 12px 20px; font-size: 17px; font-weight: bold; margin-bottom: 20px; border-right: 5px solid var(--primary); display: flex; align-items: center; gap: 10px; }
-        
         .sidebar { background: #111; border: 1px solid var(--border-color); border-radius: 8px; height: fit-content; position: sticky; top: 90px; }
         .side-title { background: #1a1a1a; color: var(--primary); font-size: 13px; font-weight: bold; padding: 12px; border-bottom: 1px solid var(--border-color); text-align: center; }
         .side-list { padding: 10px; }
@@ -142,7 +130,7 @@
             <div class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبي', 'en')">أفلام أجنبية</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', 'en')">أفلام أجنبية</a>
                     <a href="#" onclick="showCategory('discover/movie', 'أفلام عربية', 'ar')">أفلام عربية</a>
                     <a href="#" onclick="showCategory('discover/movie', 'أفلام أنمي', '16')">أفلام أنمي</a>
                 </div>
@@ -171,7 +159,7 @@
         <center><input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeyup="searchApi(this.value)"></center>
     </div>
     
-    <div class="slider-container">
+    <div class="slider-container" id="sliderArea">
         <div id="heroSection">
             <div class="slider-wrapper" id="sliderWrapper"></div>
         </div>
@@ -189,12 +177,10 @@
                     <div class="section-title"><span><i class="fa-solid fa-moon" style="color: #f1c40f;"></i> مسلسلات رمضان 2026</span></div>
                     <div class="grid-display" id="ramadanGrid"></div>
                 </section>
-
                 <section class="section-box">
                     <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #e74c3c;"></i> أفلام عربية ومصرية</span></div>
                     <div class="grid-display" id="arabicMoviesGrid"></div>
                 </section>
-
                 <section class="section-box">
                     <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> أفلام عالمية مختارة</span></div>
                     <div class="grid-display" id="moviesGrid"></div>
@@ -205,6 +191,7 @@
                 <div class="section-box">
                     <div class="section-title" id="fullTitle">نتائج البحث</div>
                     <div class="grid-display" id="fullGrid"></div>
+                    <div class="pagination" id="pagination"></div>
                 </div>
             </div>
         </main>
@@ -218,6 +205,10 @@
     <script>
         const API_KEY = 'b838a848a571a893e6b0effe4bd53db8';
         const BASE_URL = 'https://api.themoviedb.org/3';
+        
+        let currentCat = '';
+        let currentEndpoint = '';
+        let currentPage = 1;
 
         function toggleSearch() { 
             const s = document.getElementById("searchBox");
@@ -258,7 +249,6 @@
         async function init() {
             const popRes = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
             const popData = await popRes.json();
-            
             const araRes = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&language=ar-SA&sort_by=primary_release_date.desc`);
             const araData = await araRes.json();
 
@@ -304,15 +294,21 @@
             let i = 0; setInterval(() => { i = (i + 1) % movies.length; wrapper.style.transform = `translateX(${i * 100}%)`; }, 5000);
         }
 
-        async function showCategory(endpoint, title, cat) {
+        async function showCategory(endpoint, title, cat, page = 1) {
+            currentEndpoint = endpoint;
+            currentCat = cat;
+            currentPage = page;
+
             document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('sliderArea').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
             document.getElementById('fullTitle').innerText = title;
-            
-            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`;
+            document.getElementById('fullGrid').innerHTML = "<p style='text-align:center; width:100%;'>جاري التحميل...</p>";
+
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US&page=${page}`;
             if(cat === 'ar') url += `&with_original_language=ar`;
             else if(cat === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2025`;
-            else if(cat === 'netflix') url += `&with_networks=213`; // 213 is Netflix Network ID
+            else if(cat === 'netflix') url += `&with_networks=213`;
             else if(cat === '16') url += `&with_genres=16`;
             else if(cat === 'ar-tv') url += `&with_original_language=ar`;
 
@@ -320,17 +316,36 @@
             const data = await res.json();
             const type = endpoint.includes('tv') ? 'tv' : 'movie';
             const gridHtml = await fetchDataWithArabicStory(data.results, type);
+            
             document.getElementById('fullGrid').innerHTML = gridHtml.join('');
+            renderPagination(data.total_pages, title);
+            window.scrollTo(0, 0);
+        }
+
+        function renderPagination(totalPages, title) {
+            const container = document.getElementById('pagination');
+            let html = '';
+            const maxPages = Math.min(totalPages, 10); // عرض أول 10 صفحات فقط للجمال
+
+            for (let i = 1; i <= maxPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" 
+                          onclick="showCategory('${currentEndpoint}', '${title}', '${currentCat}', ${i})">${i}</button>`;
+            }
+            container.innerHTML = html;
         }
 
         async function searchApi(query) {
             if (query.length < 2) {
                 document.getElementById('homeView').classList.remove('hidden');
+                document.getElementById('sliderArea').classList.remove('hidden');
                 document.getElementById('fullView').classList.add('hidden');
                 return;
             }
             document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('sliderArea').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
+            document.getElementById('pagination').innerHTML = ''; 
+
             const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=en-US`);
             const data = await res.json();
             const gridHtml = await Promise.all(data.results.filter(m => m.poster_path).map(async (m) => {
