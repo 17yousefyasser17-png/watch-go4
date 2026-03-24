@@ -18,24 +18,41 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* --- الهيدر --- */
+        /* --- إصلاح الهيدر بالكامل --- */
         .header { 
             background: #000; padding: 0 40px; height: 75px;
             display: flex; justify-content: space-between; align-items: center; 
             border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 2000;
         }
-        .logo-ctn { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+        .logo-ctn { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; flex-shrink: 0; }
         .logo-ctn img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
 
-        .main-nav { display: flex; list-style: none; height: 100%; align-items: center; }
-        .nav-link { color: #eee; text-decoration: none; font-size: 14px; font-weight: 600; padding: 0 15px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .nav-link:hover { color: var(--primary); }
+        .main-nav { display: flex; list-style: none; height: 100%; align-items: center; gap: 5px; }
+        .nav-item { position: relative; height: 100%; display: flex; align-items: center; }
+        .nav-link { 
+            color: #eee; text-decoration: none; font-size: 14px; font-weight: 600; 
+            padding: 0 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            height: 100%; transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--primary); background: rgba(155, 81, 224, 0.05); }
 
-        .dropdown { position: absolute; top: 75px; right: 0; background: #0a0a0a; min-width: 200px; border-top: 3px solid var(--primary); display: none; flex-direction: column; box-shadow: 0 15px 30px rgba(0,0,0,0.9); }
+        .dropdown { 
+            position: absolute; top: 75px; right: 0; background: #0a0a0a; min-width: 180px; 
+            border-top: 3px solid var(--primary); display: none; flex-direction: column; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.9); z-index: 3000;
+        }
         .nav-item:hover .dropdown { display: flex; }
-        .dropdown a { color: #ccc; padding: 12px 20px; text-decoration: none; font-size: 13px; border-bottom: 1px solid #1a1a1a; text-align: right; }
+        .dropdown a { 
+            color: #ccc; padding: 12px 20px; text-decoration: none; font-size: 13px; 
+            border-bottom: 1px solid #1a1a1a; text-align: right; transition: 0.3s;
+        }
+        .dropdown a:hover { background: #151515; color: var(--primary); padding-right: 25px; }
 
-        /* --- السلايدر المعدل (Boxed & Smaller) --- */
+        .header-icons { display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
+        .icon-btn { color: #ccc; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .icon-btn:hover { color: var(--primary); }
+
+        /* --- السلايدر (Boxed & Smaller) --- */
         .slider-container { max-width: 1620px; margin: 20px auto; padding: 0 40px; }
         #heroSection { width: 100%; height: 420px; position: relative; overflow: hidden; border-radius: 15px; border: 1px solid var(--border-color); background: #000; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -45,12 +62,12 @@
             background: linear-gradient(to top, rgba(7,7,7,0.9) 10%, transparent 70%); 
             display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; 
         }
-        .slide-title { font-size: 32px; font-weight: 900; margin-bottom: 15px; direction: ltr; text-align: right; }
+        .slide-title { font-size: 32px; font-weight: 900; margin-bottom: 15px; direction: ltr; text-align: right; text-shadow: 2px 2px 10px #000; }
 
         .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 10px; width: fit-content; transition: 0.3s; }
-        .hero-btn:hover { background: #fff; color: var(--primary); }
+        .hero-btn:hover { background: #fff; color: var(--primary); transform: scale(1.05); }
 
-        /* --- الحاويات --- */
+        /* --- المحتوى الرئيسي --- */
         .container { padding: 20px 40px; display: grid; grid-template-columns: 280px 1fr 280px; gap: 25px; max-width: 1700px; margin: 0 auto; }
 
         .section-box { margin-bottom: 40px; }
@@ -63,22 +80,28 @@
         
         .item-info { padding: 12px; text-align: center; background: #161616; }
         .item-name { font-size: 13px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; color: #fff; }
-        .watch-btn { background: var(--primary); color: #fff; font-size: 11px; padding: 6px; border-radius: 4px; font-weight: bold; display: block; }
+        .watch-btn { background: var(--primary); color: #fff; font-size: 11px; padding: 8px; border-radius: 4px; font-weight: bold; display: block; transition: 0.3s; }
+        .item-card:hover .watch-btn { background: #fff; color: var(--primary); }
 
         /* البارات الجانبية */
         .sidebar { background: #111; border: 1px solid var(--border-color); border-radius: 8px; height: fit-content; position: sticky; top: 90px; }
         .side-title { background: #1a1a1a; color: var(--primary); font-size: 13px; font-weight: bold; padding: 12px; border-bottom: 1px solid var(--border-color); text-align: center; }
         .side-list { padding: 10px; }
         .side-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
+        .side-item:hover { background: #1a1a1a; }
         .side-item img { width: 45px; height: 65px; border-radius: 4px; object-fit: cover; }
         .side-item .txt { font-size: 11px; color: #ccc; direction: ltr; text-align: left; }
 
         #searchBox { background: #000; border-bottom: 1px solid var(--primary); padding: 15px; display: none; }
-        #searchBox input { width: 50%; padding: 10px 20px; background: #111; border: 1px solid var(--border-color); color: #fff; border-radius: 30px; outline: none; }
+        #searchBox input { width: 50%; padding: 10px 20px; background: #111; border: 1px solid var(--border-color); color: #fff; border-radius: 30px; outline: none; border: 1px solid var(--primary); }
 
         .hidden { display: none !important; }
 
-        @media (max-width: 1200px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } .slider-container { padding: 0 15px; } #heroSection { height: 300px; } }
+        @media (max-width: 1200px) { 
+            .container { grid-template-columns: 1fr; } 
+            .sidebar { display: none; } 
+            .main-nav { display: none; } /* يفضل تفعيل منيو الموبايل هنا */
+        }
     </style>
 </head>
 <body>
@@ -88,30 +111,38 @@
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
             <span style="font-weight: bold; font-size: 22px;">WATCH<span style="color: var(--primary);">GO</span></span>
         </a>
-        <ul class="main-nav">
-            <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
-            <li class="nav-item">
-                <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
+
+        <nav class="main-nav">
+            <div class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></div>
+            
+            <div class="nav-item">
+                <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/movie', 'Foreign Movies', '')">Foreign Movies</a>
-                    <a href="#" onclick="showCategory('discover/movie', 'Arabic Movies', 'ar')">Arabic Movies</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Foreign Movies', '')">أفلام أجنبي</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Arabic Movies', 'ar')">أفلام عربي ومصري</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Netflix Originals', '213')">نتفليكس</a>
                 </div>
-            </li>
-            <li class="nav-item">
-                <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down"></i></span>
+            </div>
+
+            <div class="nav-item">
+                <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
                 <div class="dropdown">
                     <a href="#" onclick="showCategory('discover/tv', 'Ramadan 2026', 'ramadan')">مسلسلات رمضان 2026</a>
-                    <a href="#" onclick="showCategory('discover/tv', 'TV Series', '')">TV Series</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'TV Series', '')">مسلسلات أجنبي</a>
                 </div>
-            </li>
-        </ul>
+            </div>
+
+            <div class="nav-item"><a class="nav-link" href="#" onclick="showCategory('discover/movie', 'Anime World', '16')">أنمي</a></div>
+        </nav>
+
         <div class="header-icons">
-            <i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="cursor:pointer; font-size: 18px; color: #ccc;"></i>
+            <i class="fa-solid fa-magnifying-glass icon-btn" onclick="toggleSearch()"></i>
+            <i class="fa-solid fa-bars icon-btn" style="margin-right: 10px;"></i>
         </div>
     </header>
 
     <div id="searchBox">
-        <center><input type="text" id="searchInput" placeholder="Search..." onkeyup="searchApi(this.value)"></center>
+        <center><input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeyup="searchApi(this.value)"></center>
     </div>
     
     <div class="slider-container">
@@ -151,7 +182,7 @@
 
             <div id="fullView" class="hidden">
                 <div class="section-box">
-                    <div class="section-title" id="fullTitle">Search Results</div>
+                    <div class="section-title" id="fullTitle">نتائج البحث</div>
                     <div class="grid-display" id="fullGrid"></div>
                 </div>
             </div>
@@ -170,6 +201,7 @@
         function toggleSearch() { 
             const s = document.getElementById("searchBox");
             s.style.display = (s.style.display === "block") ? "none" : "block";
+            if(s.style.display === "block") document.getElementById("searchInput").focus();
         }
 
         async function searchApi(query) {
@@ -197,39 +229,41 @@
         }
 
         async function init() {
-            const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
-            const popData = await pop.json();
-            const ara = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&sort_by=primary_release_date.desc`);
-            const araData = await ara.json();
-            
-            renderSlider([...popData.results.slice(0, 3), ...araData.results.slice(0, 2)]);
+            try {
+                const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
+                const popData = await pop.json();
+                const ara = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&sort_by=primary_release_date.desc`);
+                const araData = await ara.json();
+                
+                renderSlider([...popData.results.slice(0, 3), ...araData.results.slice(0, 2)]);
 
-            document.getElementById('moviesGrid').innerHTML = popData.results.slice(0, 12).map(m => createCard(m, 'movie')).join('');
-            document.getElementById('arabicMoviesGrid').innerHTML = araData.results.slice(0, 6).map(m => createCard(m, 'movie')).join('');
+                document.getElementById('moviesGrid').innerHTML = popData.results.slice(0, 12).map(m => createCard(m, 'movie')).join('');
+                document.getElementById('arabicMoviesGrid').innerHTML = araData.results.slice(0, 6).map(m => createCard(m, 'movie')).join('');
 
-            const ramadan = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&first_air_date_year=2025`);
-            const ramadanData = await ramadan.json();
-            document.getElementById('ramadanGrid').innerHTML = ramadanData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
+                const ramadan = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&first_air_date_year=2025`);
+                const ramadanData = await ramadan.json();
+                document.getElementById('ramadanGrid').innerHTML = ramadanData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
 
-            const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-US`);
-            const epData = await ep.json();
-            document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
+                const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-US`);
+                const epData = await ep.json();
+                document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
 
-            const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US`);
-            const bestMData = await bestM.json();
-            document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 8).map(m => `
-                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
-                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div class="txt">${m.title}</div>
-                </div>`).join('');
+                const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US`);
+                const bestMData = await bestM.json();
+                document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 8).map(m => `
+                    <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
+                        <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
+                        <div class="txt">${m.title}</div>
+                    </div>`).join('');
 
-            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US`);
-            const aniData = await ani.json();
-            document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
-                <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
-                    <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
-                    <div class="txt">${m.title}</div>
-                </div>`).join('');
+                const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US`);
+                const aniData = await ani.json();
+                document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
+                    <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
+                        <img src="https://image.tmdb.org/t/p/w200${m.poster_path}">
+                        <div class="txt">${m.title}</div>
+                    </div>`).join('');
+            } catch (e) { console.error("API Error", e); }
         }
 
         function renderSlider(movies) {
@@ -251,6 +285,8 @@
             let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`;
             if(param === 'ar') url += `&with_original_language=ar`;
             else if(param === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2025`;
+            else if(param === '16') url += `&with_genres=16`;
+            else if(param === '213') url += `&with_networks=213`;
             const res = await fetch(url);
             const data = await res.json();
             document.getElementById('fullGrid').innerHTML = data.results.map(m => createCard(m, endpoint.includes('tv') ? 'tv' : 'movie')).join('');
