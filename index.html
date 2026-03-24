@@ -11,7 +11,7 @@
     <style>
         :root { 
             --primary: #9b51e0; 
-            --bg-dark: #0a0a0a; /* أغمق شوية زي توب سيما */
+            --bg-dark: #0a0a0a; 
             --card-bg: #161616;
             --transition: 0.3s ease;
             --border-color: #282828;
@@ -20,14 +20,13 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* تأثير الخلفية */
         body::before {
             content: ""; position: fixed; inset: 0;
             background: radial-gradient(circle at 50% 0%, rgba(155, 81, 224, 0.05) 0%, transparent 70%);
             z-index: -1;
         }
 
-        /* --- الهيدر بتنسيق احترافي --- */
+        /* --- الهيدر --- */
         .header { 
             background: #000; padding: 0 40px; height: 70px;
             display: flex; justify-content: space-between; align-items: center; 
@@ -44,7 +43,6 @@
             height: 100%; transition: 0.3s;
         }
         .nav-link:hover { color: var(--primary); background: rgba(255,255,255,0.02); }
-        .nav-link i { font-size: 10px; opacity: 0.7; }
 
         .dropdown {
             position: absolute; top: 70px; right: 0; background: #111; min-width: 220px; 
@@ -64,7 +62,7 @@
         }
         .menu-circle-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* --- Sidebar الموبايل --- */
+        /* --- Sidebar --- */
         .mobile-sidebar {
             position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
             background: #111; z-index: 9999; transition: 0.4s;
@@ -78,27 +76,26 @@
         .sidebar-overlay.open { display: block; }
 
         /* --- السلايدر --- */
-        #heroSection { width: 100%; height: 480px; position: relative; overflow: hidden; border-bottom: 1px solid var(--border-color); }
+        #heroSection { width: 100%; height: 500px; position: relative; overflow: hidden; border-bottom: 1px solid var(--border-color); }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease-in-out; }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center 20%; position: relative; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 10%, transparent 90%), linear-gradient(to left, rgba(0,0,0,0.7), transparent); display: flex; flex-direction: column; justify-content: center; padding: 0 60px; }
-        .slide-title { font-size: 45px; font-weight: 900; margin-bottom: 15px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-dark) 15%, transparent 85%); display: flex; flex-direction: column; justify-content: center; padding: 0 60px; }
+        .slide-title { font-size: 45px; font-weight: 900; margin-bottom: 15px; }
 
         .hero-btn { background: var(--primary); color: white; text-decoration: none; padding: 14px 35px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
         .hero-btn:hover { background: #fff; color: #000; }
         .trailer-btn { background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255,255,255,0.2); }
 
-        /* --- تقسيم توب سيما (3 أعمدة) --- */
+        /* --- الحاويات --- */
         .container { padding: 30px 40px; display: grid; grid-template-columns: 260px 1fr 260px; gap: 20px; max-width: 1600px; margin: 0 auto; }
 
-        .section-box { margin-bottom: 30px; }
+        .section-box { margin-bottom: 40px; }
         .section-title { 
-            background: #111; padding: 10px 15px; font-size: 16px; font-weight: bold; 
-            margin-bottom: 20px; border-right: 3px solid var(--primary); 
+            background: #111; padding: 12px 15px; font-size: 16px; font-weight: bold; 
+            margin-bottom: 20px; border-right: 4px solid var(--primary); 
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* --- كارت الفيلم بتصميم توب سيما --- */
         .grid-display { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; }
         .item-card { 
             background: var(--card-bg); border-radius: 5px; overflow: hidden; 
@@ -107,37 +104,33 @@
         .item-card:hover { transform: scale(1.03); border-color: var(--primary); z-index: 5; }
         .item-card img { width: 100%; height: 250px; object-fit: cover; }
         
-        /* إضافة علامة الجودة أو السنة كشكل جمالي */
         .item-card::after {
-            content: "WEB-DL"; position: absolute; top: 10px; left: 10px;
+            content: "HD"; position: absolute; top: 10px; left: 10px;
             background: var(--primary); color: white; font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: bold;
         }
 
         .item-info { padding: 12px 8px; background: #1a1a1a; border-top: 1px solid var(--border-color); }
-        .item-name { font-size: 13px; font-weight: 600; color: #eee; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-name { font-size: 13px; font-weight: 600; color: #eee; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; }
 
-        /* البارات الجانبية (توب سيما ستايل) */
         .sidebar { background: #111; border: 1px solid var(--border-color); border-radius: 5px; height: fit-content; position: sticky; top: 90px; }
         .side-title { background: #1a1a1a; color: #fff; font-size: 14px; padding: 12px; border-bottom: 1px solid var(--border-color); text-align: center; font-weight: bold; }
         .side-list { padding: 10px; }
         .side-item { 
             display: flex; align-items: center; gap: 10px; padding: 8px;
-            border-bottom: 1px solid #1a1a1a; transition: 0.3s;
+            border-bottom: 1px solid #1a1a1a; transition: 0.3s; cursor: pointer;
         }
         .side-item:hover { background: #1a1a1a; }
         .side-item img { width: 45px; height: 60px; border-radius: 4px; object-fit: cover; }
-        .side-item .txt { font-size: 12px; color: #ccc; line-height: 1.4; }
+        .side-item .txt { font-size: 11px; color: #ccc; line-height: 1.4; direction: ltr; text-align: left; }
 
         #searchBox { background: #000; border-bottom: 1px solid var(--primary); padding: 15px; display: none; }
-        #searchBox input { width: 50%; padding: 12px 20px; background: #111; border: 1px solid var(--border-color); color: #fff; border-radius: 30px; outline: none; transition: 0.3s; }
-        #searchBox input:focus { border-color: var(--primary); }
+        #searchBox input { width: 50%; padding: 12px 20px; background: #111; border: 1px solid var(--border-color); color: #fff; border-radius: 30px; outline: none; }
 
         .hidden { display: none !important; }
 
         @media (max-width: 1200px) { 
             .container { grid-template-columns: 1fr; } 
             .sidebar { display: none; } 
-            .slide-title { font-size: 28px; }
         }
     </style>
 </head>
@@ -146,7 +139,7 @@
     <header class="header">
         <a href="index.html" class="logo-ctn">
             <img src="https://i.ibb.co/5ggRsXdV/Red-Black-Modern-Movie-Cinema-Presentation-20260311-124846.jpg">
-            <span style="font-weight: bold; font-size: 22px; letter-spacing: 1px;">WATCH<span style="color: var(--primary);">GO</span></span>
+            <span style="font-weight: bold; font-size: 22px;">WATCH<span style="color: var(--primary);">GO</span></span>
         </a>
         
         <ul class="main-nav">
@@ -154,19 +147,20 @@
             <li class="nav-item">
                 <span class="nav-link">الأفلام <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', '')">أفلام أجنبية</a>
-                    <a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Foreign Movies', '')">Foreign Movies</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Arabic Movies', 'ar')">Arabic Movies</a>
+                    <a href="#" onclick="showCategory('discover/movie', 'Netflix Originals', '213')">Netflix</a>
                 </div>
             </li>
             <li class="nav-item">
                 <span class="nav-link">المسلسلات <i class="fa-solid fa-chevron-down"></i></span>
                 <div class="dropdown">
-                    <a href="#" onclick="showCategory('discover/tv', 'أحدث المسلسلات', '')">مسلسلات حديثة</a>
-                    <a href="#" onclick="showCategory('discover/tv', 'دراما كورية', 'ko')">الدراما الكورية</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'Ramadan 2026', 'ramadan')">مسلسلات رمضان 2026</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'TV Series', '')">TV Series</a>
+                    <a href="#" onclick="showCategory('discover/tv', 'Korean Drama', 'ko')">K-Drama</a>
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="showCategory('discover/movie', 'عالم الأنمي', '16')">الأنمي</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">مسلسلات كاملة</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="showCategory('discover/movie', 'Anime World', '16')">Anime</a></li>
         </ul>
 
         <div class="header-icons">
@@ -179,57 +173,65 @@
 
     <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-sidebar" id="mobileSidebar">
-        <div class="close-menu" onclick="toggleMobileMenu()" style="text-align: left; padding-bottom: 20px; border-bottom: 1px solid #222; margin-bottom: 20px;"><i class="fa-solid fa-xmark"></i> إغلاق القائمة</div>
+        <div class="close-menu" onclick="toggleMobileMenu()"><i class="fa-solid fa-xmark"></i> إغلاق</div>
         <div class="sidebar-content">
-            <h3><i class="fa-solid fa-film"></i> الأفلام</h3>
+            <h3>الأفلام</h3>
             <ul>
-                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام عربية ومصرية', 'ar')">أفلام عربية ومصرية</a></li>
-                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام أجنبية', '')">أفلام أجنبية</a></li>
-                <li><a href="#" onclick="showCategory('discover/movie', 'أفلام نتفليكس', '213')">أفلام نتفليكس</a></li>
+                <li><a href="#" onclick="showCategory('discover/movie', 'Arabic Movies', 'ar')">أفلام عربية ومصرية</a></li>
+                <li><a href="#" onclick="showCategory('discover/movie', 'Foreign Movies', '')">أفلام أجنبية</a></li>
             </ul>
-            <h3><i class="fa-solid fa-tv"></i> المسلسلات</h3>
+            <h3>المسلسلات</h3>
             <ul>
-                <li><a href="#" onclick="showCategory('discover/tv', 'مسلسلات مصرية', 'eg')">مسلسلات مصرية</a></li>
-                <li><a href="#" onclick="showCategory('discover/tv', 'مسلسلات عربية', 'ar')">مسلسلات عربية</a></li>
-                <li><a href="#" onclick="showCategory('discover/tv', 'دراما كورية', 'ko')">الدراما الكورية</a></li>
+                <li><a href="#" onclick="showCategory('discover/tv', 'Ramadan 2026', 'ramadan')">مسلسلات رمضان 2026</a></li>
             </ul>
         </div>
     </div>
 
     <div id="searchBox">
-        <center><input type="text" id="searchInput" placeholder="ابحث عن فيلمك المفضل..." onkeyup="searchApi(this.value)"></center>
+        <center><input type="text" id="searchInput" placeholder="Search for movies or series..." onkeyup="searchApi(this.value)"></center>
     </div>
     
     <div id="heroSection"><div class="slider-wrapper" id="sliderWrapper"></div></div>
 
     <div class="container">
         <aside class="sidebar">
-            <div class="side-title">أفضل أفلام الشهر</div>
+            <div class="side-title">TOP RATED</div>
             <div class="side-list" id="bestMoviesSide"></div>
         </aside>
 
         <main class="main-col">
             <div id="homeView">
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-fire" style="color: #ff4757;"></i> أحدث الإضافات</span></div>
+                    <div class="section-title"><span><i class="fa-solid fa-moon" style="color: #f1c40f;"></i> مسلسلات رمضان 2026</span></div>
+                    <div class="grid-display" id="ramadanGrid"></div>
+                </section>
+
+                <section class="section-box">
+                    <div class="section-title"><span><i class="fa-solid fa-flag" style="color: #e74c3c;"></i> أفلام عربية ومصرية</span></div>
+                    <div class="grid-display" id="arabicMoviesGrid"></div>
+                </section>
+
+                <section class="section-box">
+                    <div class="section-title"><span><i class="fa-solid fa-fire" style="color: #ff4757;"></i> Recent TV Shows</span></div>
                     <div class="grid-display" id="episodesGrid"></div>
                 </section>
+
                 <section class="section-box">
-                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> أفلام مقترحة</span></div>
+                    <div class="section-title"><span><i class="fa-solid fa-star" style="color: #ffa502;"></i> Recommended Movies</span></div>
                     <div class="grid-display" id="moviesGrid"></div>
                 </section>
             </div>
 
             <div id="fullView" class="hidden">
                 <div class="section-box">
-                    <div class="section-title" id="fullTitle">نتائج البحث</div>
+                    <div class="section-title" id="fullTitle">Search Results</div>
                     <div class="grid-display" id="fullGrid"></div>
                 </div>
             </div>
         </main>
 
         <aside class="sidebar">
-            <div class="side-title">أحدث الأنميات</div>
+            <div class="side-title">LATEST ANIME</div>
             <div class="side-list" id="animeSide"></div>
         </aside>
     </div>
@@ -257,9 +259,9 @@
             }
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
-            document.getElementById('fullTitle').innerText = `نتائج البحث عن: ${query}`;
+            document.getElementById('fullTitle').innerText = `Results for: ${query}`;
             
-            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=ar`);
+            const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=en-US`);
             const data = await res.json();
             document.getElementById('fullGrid').innerHTML = data.results
                 .filter(m => m.poster_path)
@@ -277,16 +279,35 @@
         }
 
         async function init() {
-            const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ar`);
+            // سحب الأفلام الأجنبية + العربية للسلايدر
+            const pop = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US`);
             const popData = await pop.json();
-            renderSlider(popData.results.slice(0, 5));
+            
+            const araSlide = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=ar&sort_by=primary_release_date.desc`);
+            const araSlideData = await araSlide.json();
+            
+            // دمج أول 3 من هنا و 2 من هنا للسلايدر
+            const mixedSlider = [...popData.results.slice(0, 3), ...araSlideData.results.slice(0, 2)];
+            renderSlider(mixedSlider);
+
+            // أقلام مقترحة (English)
             document.getElementById('moviesGrid').innerHTML = popData.results.slice(0, 12).map(m => createCard(m, 'movie')).join('');
 
-            const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=ar`);
-            const epData = await ep.json();
-            document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 12).map(m => createCard(m, 'tv')).join('');
+            // مسلسلات رمضان (نبحث عن مسلسلات عربية حديثة)
+            const ramadan = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ar&first_air_date_year=2025`);
+            const ramadanData = await ramadan.json();
+            document.getElementById('ramadanGrid').innerHTML = ramadanData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
 
-            const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=ar`);
+            // أفلام عربية ومصرية
+            document.getElementById('arabicMoviesGrid').innerHTML = araSlideData.results.slice(0, 6).map(m => createCard(m, 'movie')).join('');
+
+            // مسلسلات أجنبية
+            const ep = await fetch(`${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&language=en-US`);
+            const epData = await ep.json();
+            document.getElementById('episodesGrid').innerHTML = epData.results.slice(0, 6).map(m => createCard(m, 'tv')).join('');
+
+            // السايد بار
+            const bestM = await fetch(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US`);
             const bestMData = await bestM.json();
             document.getElementById('bestMoviesSide').innerHTML = bestMData.results.slice(0, 8).map(m => `
                 <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
@@ -294,7 +315,7 @@
                     <div class="txt">${m.title}</div>
                 </div>`).join('');
 
-            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=ar`);
+            const ani = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=16&language=en-US`);
             const aniData = await ani.json();
             document.getElementById('animeSide').innerHTML = aniData.results.slice(0, 8).map(m => `
                 <div class="side-item" onclick="location.href='movie.html?id=${m.id}&type=movie'">
@@ -308,18 +329,15 @@
             wrapper.innerHTML = movies.map(m => `
                 <div class="slide" style="background-image: url('https://image.tmdb.org/t/p/original${m.backdrop_path}')">
                     <div class="slide-overlay">
-                        <h2 class="slide-title">${m.title}</h2>
+                        <h2 class="slide-title" style="direction:ltr; text-align:right;">${m.title || m.name}</h2>
                         <div class="hero-btns-container" style="display:flex; gap:10px;">
-                            <a href="movie.html?id=${m.id}&type=movie" class="hero-btn">
-                                <i class="fa-solid fa-play"></i> شاهد الآن
-                            </a>
-                            <a href="movie.html?id=${m.id}&type=movie&trailer=1" class="hero-btn trailer-btn">
-                                <i class="fa-solid fa-circle-play"></i> الإعلان
+                            <a href="movie.html?id=${m.id}&type=${m.title ? 'movie' : 'tv'}" class="hero-btn">
+                                <i class="fa-solid fa-play"></i> Watch Now
                             </a>
                         </div>
                     </div>
                 </div>`).join('');
-            let i = 0; setInterval(() => { i = (i + 1) % 5; wrapper.style.transform = `translateX(${i * 100}%)`; }, 6000);
+            let i = 0; setInterval(() => { i = (i + 1) % movies.length; wrapper.style.transform = `translateX(${i * 100}%)`; }, 5000);
         }
 
         async function showCategory(endpoint, title, param) {
@@ -327,12 +345,14 @@
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('fullView').classList.remove('hidden');
             document.getElementById('fullTitle').innerText = title;
-            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=ar`;
+            let url = `${BASE_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`;
+            
             if(param === 'ar') url += `&with_original_language=ar`;
-            else if(param === 'eg') url += `&with_original_language=ar&with_origin_country=EG`;
+            else if(param === 'ramadan') url += `&with_original_language=ar&first_air_date_year=2025`;
             else if(param === '16') url += `&with_genres=16`;
             else if(param === '213') url += `&with_networks=213`;
             else if(param === 'ko') url += `&with_original_language=ko`;
+
             const res = await fetch(url);
             const data = await res.json();
             document.getElementById('fullGrid').innerHTML = data.results.map(m => createCard(m, endpoint.includes('tv') ? 'tv' : 'movie')).join('');
