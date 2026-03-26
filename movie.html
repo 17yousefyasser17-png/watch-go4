@@ -118,8 +118,8 @@
         <div class="movie-layout">
             <div class="side-panel">
                 <img src="" id="poster" class="poster blur-item">
-                <button class="btn btn-watch"><i class="fa-solid fa-play"></i> المشاهدة الآن</button>
-                <button class="btn btn-download"><i class="fa-solid fa-download"></i> تحميل مباشر</button>
+                <button id="mainWatchBtn" class="btn btn-watch"><i class="fa-solid fa-play"></i> المشاهدة الآن</button>
+                <button id="mainDownloadBtn" class="btn btn-download"><i class="fa-solid fa-download"></i> تحميل مباشر</button>
                 <button id="openTrailer" class="btn btn-trailer"><i class="fa-brands fa-youtube"></i> العرض الدعائي</button>
             </div>
 
@@ -173,10 +173,18 @@
         const id = params.get('id');
         const type = params.get('type') || 'movie';
 
+        // دالة جديدة لجلب بيانات الفيلم من السيرفر الخاص بك أولاً
         async function fetchContent() {
             if(!id) return;
             try {
-                // طلب البيانات بالعربية والإنجليزية في نفس الوقت
+                // 1. محاولة جلب البيانات من السيرفر بتاعك (الباك إند)
+                let localData = null;
+                try {
+                    const localRes = await fetch(`http://localhost:3000/api/movies/${id}`);
+                    if(localRes.ok) localData = await localRes.json();
+                } catch(e) { console.log("Local server not found, fallback to TMDB"); }
+
+                // 2. جلب البيانات من TMDB (البيانات العالمية)
                 const [resAR, resEN, resVid, resSim] = await Promise.all([
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=ar-SA`),
                     fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=credits`),
@@ -189,15 +197,28 @@
                 const vids = await resVid.json();
                 const similar = await resSim.json();
 
-                // تعريب القصة بذكاء: نأخذ العربية وإذا كانت فارغة نأخذ الإنجليزية
+                // تعبئة البيانات
                 document.getElementById('movieOverview').innerText = (dataAR.overview && dataAR.overview.length > 5) ? dataAR.overview : (dataEN.overview || "الوصف غير متوفر حالياً.");
-                
-                // العنوان: يفضل الإنجليزي لأنه الأساسي في قاعدة البيانات العالمية ولكن يمكنك تغييره لـ dataAR.title إذا أردت
-                document.getElementById('movieTitle').innerText = dataEN.title || dataEN.name || dataAR.title || dataAR.name;
-                
-                document.getElementById('poster').src = `https://image.tmdb.org/t/p/w500${dataEN.poster_path}`;
+                document.getElementById('movieTitle').innerText = localData ? localData.title : (dataEN.title || dataEN.name);
+                document.getElementById('poster').src = localData ? localData.poster : `https://image.tmdb.org/t/p/w500${dataEN.poster_path}`;
                 document.getElementById('heroSection').style.backgroundImage = `url(https://image.tmdb.org/t/p/original${dataEN.backdrop_path})`;
                 
+                // ربط الأزرار (أهم جزء طلبته يا يوسف)
+                const watchBtn = document.getElementById('mainWatchBtn');
+                const downloadBtn = document.getElementById('mainDownloadBtn');
+
+                watchBtn.onclick = () => {
+                    // بياخده لصفحة المشاهدة السوداء اللي فيها الفيلم
+                    window.location.href = `watch.html?id=${id}`;
+                };
+
+                downloadBtn.onclick = () => {
+                    // لو الفيلم مرفوع عندك، يفتح الرابط بتاعه، لو لا يفتح صفحة التحميل العادية
+                    const downloadLink = localData ? localData.link : "#";
+                    window.open(downloadLink, '_blank');
+                };
+
+                // باقي بيانات الواجهة
                 document.getElementById('detType').innerText = type === 'tv' ? 'مسلسل' : 'فيلم';
                 document.getElementById('detRate').innerText = (dataEN.vote_average || 0).toFixed(1) + ' / 10';
                 document.getElementById('detYear').innerText = (dataEN.release_date || dataEN.first_air_date || '').split('-')[0];
@@ -249,7 +270,6 @@
             const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=ar-SA`);
             const data = await res.json();
             
-            // في حالة لم تكن بيانات الحلقة مترجمة للعربية
             const resBackup = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${sn}?api_key=${API_KEY}&language=en-US`);
             const dataBackup = await resBackup.json();
 
