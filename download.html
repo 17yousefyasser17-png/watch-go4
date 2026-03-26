@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تحميل الفيلم - WatchGo</title>
+    <style>
+        body { background: #050505; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .dl-container { text-align: center; background: #111; padding: 40px; border-radius: 20px; border: 1px solid #9b51e0; box-shadow: 0 0 30px rgba(155, 81, 224, 0.2); max-width: 400px; width: 90%; }
+        h2 { color: #9b51e0; margin-bottom: 20px; }
+        .timer { font-size: 40px; font-weight: bold; margin: 20px 0; color: #fff; }
+        .btn-final { display: none; background: #9b51e0; color: white; text-decoration: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        .btn-final:hover { background: #7e3eb3; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="dl-container">
+        <h2 id="movieName">جاري تحضير رابط التحميل...</h2>
+        <div id="countdown" class="timer">5</div>
+        <p id="statusText">يرجى الانتظار قليلاً...</p>
+        <a href="#" id="downloadLink" class="btn-final">إضغط هنا للتحميل الآن <i class="fa-solid fa-download"></i></a>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id');
+
+        async function initDownload() {
+            try {
+                // بنجيب بيانات الفيلم عشان ناخد رابط التحميل
+                const res = await fetch(`http://localhost:3000/api/movies/${movieId}`);
+                const movie = await res.json();
+                
+                if (movie && movie.link) {
+                    document.getElementById('movieName').innerText = `تحميل: ${movie.title}`;
+                    
+                    // العداد (5 ثواني)
+                    let seconds = 5;
+                    const interval = setInterval(() => {
+                        seconds--;
+                        document.getElementById('countdown').innerText = seconds;
+                        if (seconds <= 0) {
+                            clearInterval(interval);
+                            document.getElementById('countdown').style.display = 'none';
+                            document.getElementById('statusText').style.display = 'none';
+                            const finalBtn = document.getElementById('downloadLink');
+                            finalBtn.href = movie.link; // الرابط الخارجي اللي أنت ضفته في الداشبورد
+                            finalBtn.style.display = 'inline-block';
+                        }
+                    }, 1000);
+                }
+            } catch (e) {
+                document.getElementById('statusText').innerText = "حدث خطأ في جلب الرابط";
+            }
+        }
+        initDownload();
+    </script>
+</body>
+</html>
