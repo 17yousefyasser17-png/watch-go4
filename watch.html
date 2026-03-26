@@ -2,30 +2,96 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مشاهدة الفيلم - WatchGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Now - WatchGo</title>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .video-container { width: 90%; height: 80vh; border: 2px solid #9b51e0; border-radius: 15px; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* شاشة سوداء بالكامل وتلغي أي هوامش */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            width: 100%; 
+            background: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden;
+        }
+
+        /* حاوية الفيديو عشان تضمن الثبات */
+        .video-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            box-shadow: 0 0 50px rgba(155, 81, 224, 0.1);
+        }
+
+        /* رسالة انتظار بسيطة بلون بربل قبل ما الفيلم يفتح */
+        .loading-text {
+            color: #9b51e0;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div class="video-container">
+
+    <div id="loader" class="loading-text">جاري تحضير السيرفر...</div>
+    
+    <div class="video-wrapper">
         <iframe id="videoPlayer" src="" allowfullscreen></iframe>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const movieId = urlParams.get('id');
+        // بنجيب الـ ID بتاع الفيلم من الرابط (watch.html?id=123)
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id');
 
-        async function startStreaming() {
-            const res = await fetch(`http://localhost:3000/api/movies/${movieId}`);
-            const movie = await res.json();
-            
-            // بنحط رابط السيرفر الخارجي جوه الـ iframe
-            document.getElementById('videoPlayer').src = movie.link;
+        async function getMovieUrl() {
+            if (!movieId) {
+                document.getElementById('loader').innerText = "خطأ: لم يتم تحديد فيلم";
+                return;
+            }
+
+            try {
+                // بنكلم الباك اند بتاعك عشان ناخد الرابط (Link) اللي متسيف في الداتابيز
+                const response = await fetch(`http://localhost:3000/api/movies/${movieId}`);
+                if (!response.ok) throw new Error('Movie not found');
+                
+                const movie = await response.json();
+
+                if (movie && movie.link) {
+                    // أول ما الرابط يوصل، بنخفي كلمة التحميل ونظهر الـ iframe
+                    document.getElementById('loader').style.display = 'none';
+                    const player = document.getElementById('videoPlayer');
+                    player.src = movie.link;
+                } else {
+                    document.getElementById('loader').innerText = "عذراً، هذا الفيلم لا يملك رابط مشاهدة";
+                }
+            } catch (error) {
+                console.error("Error fetching movie:", error);
+                document.getElementById('loader').innerText = "فشل الاتصال بالسيرفر";
+            }
         }
-        startStreaming();
+
+        // تشغيل الدالة أول ما الصفحة تفتح
+        getMovieUrl();
     </script>
 </body>
 </html>
